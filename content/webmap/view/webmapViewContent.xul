@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://webmap/content/view/webmapView.css" type="text/css"?>
+<?xml-stylesheet href="chrome://webmap/skin/view/webmapView.css" type="text/css"?>
+
+<page
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:svg="http://www.w3.org/2000/svg"
+	orient="vertical">
+
+<script type="application/x-javascript" src="chrome://webmap/content/view/webmapViewContent.js"/>
+<script type="application/x-javascript" src="chrome://webmap/content/view/webmapViewHelper.js"/>
+
+
+
+<svg:svg id="canvas"
+	width="100%"
+	height="100%">
+
+	<!--svg:defs>
+		<svg:marker id="Triangle"
+			viewBox="0 0 10 10" refX="0" refY="5" 
+			markerUnits="strokeWidth"
+			markerWidth="40" markerHeight="30"
+			orient="auto">
+			<svg:path d="M 0 0 L 10 5 L 0 10 z" />
+		</svg:marker>
+	</svg:defs-->
+
+	<svg:rect id="view-background"
+		x="0" y="0"
+		height="100%"
+		width="100%"/>
+
+	<svg:g id="worlds">
+		<svg:g class="webmap-world" id="world-domain"><svg:g class="layer-arcs"/><svg:g class="layer-nodes"/></svg:g>
+		<svg:g class="webmap-world" id="world-all"><svg:g class="layer-arcs"/><svg:g class="layer-nodes"/></svg:g>
+	</svg:g>
+
+	<svg:g id="arc-markers">
+		<svg:g id="arc-marker-image"
+			x="-10000" y="-10000"/>
+	</svg:g>
+
+	<svg:g id="layer-scroll-buttons">
+		<svg:g id="scroll-button-up" class="scroll-button">
+			<svg:path class="button-dropshadow"
+				d="M -12 12 L 12 12 L 0 0 L -12 12 z"
+				transform="translate(2, 2)"/>
+			<svg:path class="button"
+				d="M -12 12 L 12 12 L 0 0 L -12 12 z"/>
+		</svg:g>
+		<svg:g id="scroll-button-right" class="scroll-button">
+			<svg:path class="button-dropshadow"
+				d="M -12 -12 L -12 12 L 0 0 L -12 -12 z"
+				transform="translate(2, 2)"/>
+			<svg:path class="button"
+				d="M -12 -12 L -12 12 L 0 0 L -12 -12 z"/>
+		</svg:g>
+		<svg:g id="scroll-button-down" class="scroll-button">
+			<svg:path class="button-dropshadow"
+				d="M -12 -12 L 12 -12 L 0 0 L -12 -12 z"
+				transform="translate(2, 2)"/>
+			<svg:path class="button"
+				d="M -12 -12 L 12 -12 L 0 0 L -12 -12 z"/>
+		</svg:g>
+		<svg:g id="scroll-button-left" class="scroll-button">
+			<svg:path class="button-dropshadow"
+				d="M 12 -12 L 12 12 L 0 0 L 12 -12 z"
+				transform="translate(2, 2)"/>
+			<svg:path class="button"
+				d="M 12 -12 L 12 12 L 0 0 L 12 -12 z"/>
+		</svg:g>
+
+		<svg:g id="scroll-button-upright" class="scroll-button">
+			<svg:path class="button-dropshadow"
+				d="M -12 12 L 12 12 L 0 0 L -12 12 z"
+				transform="translate(2, 2) rotate(45) scale(0.8)"/>
+			<svg:path class="button"
+				d="M -12 12 L 12 12 L 0 0 L -12 12 z"
+				transform="rotate(45) scale(0.8)"/>
+		</svg:g>
+		<svg:g id="scroll-button-upleft" class="scroll-button">
+			<svg:path class="button-dropshadow"
+				d="M -12 12 L 12 12 L 0 0 L -12 12 z"
+				transform="translate(2, 2) rotate(-45) scale(0.8)"/>
+			<svg:path class="button"
+				d="M -12 12 L 12 12 L 0 0 L -12 12 z"
+				transform="rotate(-45) scale(0.8)"/>
+		</svg:g>
+		<svg:g id="scroll-button-downright" class="scroll-button">
+			<svg:path class="button-dropshadow"
+				d="M -12 -12 L 12 -12 L 0 0 L -12 -12 z"
+				transform="translate(2, 2) rotate(-45) scale(0.8)"/>
+			<svg:path class="button"
+				d="M -12 -12 L 12 -12 L 0 0 L -12 -12 z"
+				transform="rotate(-45) scale(0.8)"/>
+		</svg:g>
+		<svg:g id="scroll-button-downleft" class="scroll-button">
+			<svg:path class="button-dropshadow"
+				d="M -12 -12 L 12 -12 L 0 0 L -12 -12 z"
+				transform="translate(2, 2) rotate(45) scale(0.8)"/>
+			<svg:path class="button"
+				d="M -12 -12 L 12 -12 L 0 0 L -12 -12 z"
+				transform="rotate(45) scale(0.8)"/>
+		</svg:g>
+	</svg:g>
+
+</svg:svg>
+
+</page>

@@ -1,0 +1,184 @@
+<!ENTITY webmap.title "Web Map">
+
+
+<!ENTITY webmap.toolbar.label     "Web Mapツールバー">
+<!ENTITY webmap.toolbar.accesskey "W">
+<!ENTITY webmap.toolbar.customize.label     "カスタマイズ...">
+<!ENTITY webmap.toolbar.customize.accesskey "C">
+
+<!ENTITY webmap.menu.file.label           "ファイル">
+<!ENTITY webmap.menu.file.accesskey       "F">
+<!ENTITY webmap.menu.file.openBrowser.label     "新しいブラウザウィンドウを開く">
+<!ENTITY webmap.menu.file.openBrowser.accesskey "N">
+<!ENTITY webmap.menu.file.openBrowser.shortcut  "n">
+<!ENTITY webmap.menu.file.close.label     "閉じる">
+<!ENTITY webmap.menu.file.close.accesskey "C">
+<!ENTITY webmap.menu.file.close.shortcut  "w">
+<!ENTITY webmap.menu.file.config.label     "設定">
+<!ENTITY webmap.menu.file.config.accesskey "p">
+
+<!ENTITY webmap.menu.view.label                  "表示">
+<!ENTITY webmap.menu.view.accesskey              "V">
+<!ENTITY webmap.menu.view.mode.label             "すべてのノードを表示">
+<!ENTITY webmap.menu.view.mode.accesskey         "A">
+<!ENTITY webmap.menu.view.collapse.label         "ウィンドウをたたむ">
+<!ENTITY webmap.menu.view.collapse.accesskey     "C">
+<!ENTITY webmap.menu.view.autoCollapse.label     "ウィンドウを自動的にたたむ">
+<!ENTITY webmap.menu.view.autoCollapse.accesskey "W">
+<!ENTITY webmap.menu.view.alwaysRaised.label     "ウィンドウを最前面に表示">
+<!ENTITY webmap.menu.view.alwaysRaised.accesskey "R">
+<!ENTITY webmap.menu.view.autoMinimize.label     "ブラウザに連動して最小化">
+<!ENTITY webmap.menu.view.autoMinimize.accesskey "M">
+<!ENTITY webmap.menu.view.autoClose.label        "ブラウザに連動して起動">
+<!ENTITY webmap.menu.view.autoClose.accesskey    "S">
+
+
+<!ENTITY webmap.toggleWebMapView.title     "&webmap.title;">
+<!ENTITY webmap.toggleWebMapView.tooltip   "&webmap.title;">
+<!ENTITY webmap.toggleWebMapView.shorcut   "M">
+<!ENTITY webmap.toggleWebMapView.accesskey "M">
+
+
+<!ENTITY webmap.context.maxwidth             "20em">
+
+<!ENTITY webmap.context.load.label             "ノードを開く">
+<!ENTITY webmap.context.load.accesskey         "O">
+<!ENTITY webmap.context.openWindow.label       "ノードを新しいウィンドウで開く">
+<!ENTITY webmap.context.openWindow.accesskey   "W">
+<!ENTITY webmap.context.loadInTab.label        "ノードを新しいタブで開く">
+<!ENTITY webmap.context.loadInTab.accesskey    "T">
+<!ENTITY webmap.context.loadDomainInTab.label  "このドメインのすべてのノードをタブで開く">
+<!ENTITY webmap.context.loadDomainInTab.accesskey "T">
+<!ENTITY webmap.context.loadAllInTab.label     "選択したノードをタブで開く">
+<!ENTITY webmap.context.loadAllInTab.accesskey "T">
+<!ENTITY webmap.context.loadAllDomainInTab.label "選択したドメインのすべてのノードをタブで開く">
+<!ENTITY webmap.context.loadAllDomainInTab.accesskey "A">
+
+<!ENTITY webmap.context.gotoFromNode.label       "「&#37;s」に移動">
+<!ENTITY webmap.context.gotoFromNode.accesskey   "A">
+<!ENTITY webmap.context.gotoTargetNode.label     "「&#37;s」に移動">
+<!ENTITY webmap.context.gotoTargetNode.accesskey "T">
+
+<!ENTITY webmap.context.selectAll.label            "すべてを選択">
+<!ENTITY webmap.context.selectAll.accesskey        "A">
+<!ENTITY webmap.context.selectAll.shortcut         "a">
+<!ENTITY webmap.context.selectSameDomain.label     "このノードと同じドメインのノードを選択">
+<!ENTITY webmap.context.selectSameDomain.accesskey "S">
+<!ENTITY webmap.context.selectNeighbor.label       "隣接するノードを選択">
+<!ENTITY webmap.context.selectNeighbor.accesskey   "N">
+
+<!ENTITY webmap.context.removeNode.label          "ノードを削除">
+<!ENTITY webmap.context.removeNode.accesskey      "D">
+<!ENTITY webmap.context.removeDomain.label        "このドメインを削除">
+<!ENTITY webmap.context.removeDomain.accesskey    "D">
+<!ENTITY webmap.context.removeArc.label           "アークを削除">
+<!ENTITY webmap.context.removeArc.accesskey       "D">
+<!ENTITY webmap.context.removeSelection.label     "選択したノードを削除">
+<!ENTITY webmap.context.removeSelection.accesskey "N">
+<!ENTITY webmap.context.removeDomainSelection.label "選択したドメインを削除">
+<!ENTITY webmap.context.removeDomainSelection.accesskey "N">
+
+
+<!ENTITY webmap.context.zoomIn.label          "拡大">
+<!ENTITY webmap.context.zoomIn.accesskey      "I">
+<!ENTITY webmap.context.zoomIn.shortcut       "+">
+<!ENTITY webmap.context.zoomOut.label         "縮小">
+<!ENTITY webmap.context.zoomOut.accesskey     "O">
+<!ENTITY webmap.context.zoomOut.shortcut      "-">
+<!ENTITY webmap.context.startScroll.label     "スクロール">
+<!ENTITY webmap.context.startScroll.accesskey "P">
+
+<!ENTITY webmap.context.nodes.label     "ノードをさがす">
+<!ENTITY webmap.context.nodes.accesskey "F">
+<!ENTITY webmap.context.nodes.select    "このノードをさがす">
+
+
+
+<!ENTITY webmap.toolbar.mapmode.label    "すべて表示">
+<!ENTITY webmap.toolbar.mapmode.tooltip  "すべてのノードを表示">
+<!ENTITY webmap.toolbar.collapse.label   "たたむ">
+<!ENTITY webmap.toolbar.collapse.tooltip "ウィンドウをたたむ">
+<!ENTITY webmap.toolbar.zoomin.label     "拡大">
+<!ENTITY webmap.toolbar.zoomin.tooltip   "表示を拡大">
+<!ENTITY webmap.toolbar.zoomout.label    "縮小">
+<!ENTITY webmap.toolbar.zoomout.tooltip  "表示を縮小">
+<!ENTITY webmap.toolbar.throbber.label   "処理中アイコン">
+<!ENTITY webmap.toolbar.throbber.tooltip "Web Mapプロジェクトページへ移動します">
+
+<!ENTITY webmap.status.zoom.label        "ズーム">
+<!ENTITY webmap.status.zoom.label_before "">
+<!ENTITY webmap.status.zoom.label_after  "&#37;">
+<!ENTITY webmap.status.pan.label_before  "X:">
+<!ENTITY webmap.status.pan.label_middle  " / Y:">
+<!ENTITY webmap.status.pan.label_after   "">
+<!ENTITY webmap.status.move.label_before "X:">
+<!ENTITY webmap.status.move.label_middle " / Y:">
+<!ENTITY webmap.status.move.label_after  "">
+
+
+<!ENTITY webmap.status.msg.build.start  "しばらくお待ちください...">
+<!ENTITY webmap.status.msg.build.end    "完了">
+<!ENTITY webmap.status.msg.build.node   "&quot;&#37;uri&#37;&quot; のノードを生成しています...">
+<!ENTITY webmap.status.msg.build.arc    "&quot;&#37;uri1&#37;&quot; から &quot;&#37;uri2&#37;&quot; へのアークを生成しています...">
+
+<!ENTITY webmap.status.msg.node.mouseover "&#37;title&#37; (&#37;uri&#37;)">
+<!ENTITY webmap.status.msg.node.mouseout  "">
+<!ENTITY webmap.status.msg.domain.mouseover "&#37;title&#37; (&#37;uri&#37;, &#37;count&#37;個のノード)">
+<!ENTITY webmap.status.msg.domain.mouseout  "">
+<!ENTITY webmap.status.msg.arc.mouseover  "&quot;&#37;title1&#37;&quot; &#8658; &quot;&#37;title2&#37;&quot;">
+<!ENTITY webmap.status.msg.arc.mouseout   "">
+<!ENTITY webmap.status.msg.arc.interactive.mouseover  "&quot;&#37;title1&#37;&quot; &#8660; &quot;&#37;title2&#37;&quot;">
+<!ENTITY webmap.status.msg.arc.interactive.mouseout   "">
+
+
+
+<!ENTITY webmap.nodes.domain.count.prefix  "(">
+<!ENTITY webmap.nodes.domain.count.postfix ")">
+
+
+
+
+
+<!ENTITY webmap.prefDialog.title "Web Mapの設定">
+
+<!ENTITY webmap.showbutton.toggleWebMapView "ツールバーにWeb Mapのボタンを追加する">
+
+
+<!ENTITY webmap.general.tab                 "全般">
+
+<!ENTITY webmap.general.autolink_samedomain "リンクされていない同じドメインのノードを自動的に関連付ける">
+<!ENTITY webmap.general.load_root_favicon   "アイコン指定が無い場合にドキュメントルートのアイコンを探す">
+<!ENTITY webmap.general.schemer             "ノードとして認識するスキーマ（カンマ区切りで指定）">
+<!ENTITY webmap.general.ignore_query_string "URIの「?」以降を無視する">
+<!ENTITY webmap.general.maxnodes.prefix  "ノー度数の上限（0=無制限）：">
+<!ENTITY webmap.general.maxnodes.postfix "">
+
+
+<!ENTITY webmap.view.tab                  "マップ表示">
+
+<!ENTITY webmap.view.mode_auto_change     "広域表示と詳細表示を自動的に切り替える">
+<!ENTITY webmap.view.mode_auto_change.scale.prefix "">
+<!ENTITY webmap.view.mode_auto_change.scale.postfix "&#37;以上に拡大した時に詳細表示にする">
+<!ENTITY webmap.view.autohide_scrollbuttons "スクロールボタンを自動的に隠す">
+<!ENTITY webmap.view.vertexrelation.enabled "ノードをドラッグする時に近くのノードを引きずる">
+
+
+<!ENTITY webmap.node.tab            "ノードの表示">
+
+<!ENTITY webmap.node.image.type            "ノードの表示">
+<!ENTITY webmap.node.image.type.favicon    "アイコンのみ">
+<!ENTITY webmap.node.image.type.thumbnail  "サムネイル">
+<!ENTITY webmap.node.thumbnail.irfanview   "IrfanView32のパス：">
+<!ENTITY webmap.node.thumbnail.irfanview.chooserTitle   "IrfanView32の実行ファイルを選択して下さい">
+<!ENTITY webmap.node.thumbnail.imagemagick "ImageMagickのパス：">
+<!ENTITY webmap.node.thumbnail.imagemagick.chooserTitle "ImageMagickがインストールされているフォルダを選択して下さい">
+<!ENTITY webmap.node.thumbnail.choose      "参照...">
+
+
+
+<!ENTITY webmap.about.tab         "Web Mapについて">
+
+<!ENTITY webmap.about.name_before "Web Map Ver.">
+<!ENTITY webmap.about.name_after  "">
+<!ENTITY webmap.about.destributed "http://piro.sakura.ne.jp/">
+<!ENTITY webmap.about.uninstall   "アンインストール">

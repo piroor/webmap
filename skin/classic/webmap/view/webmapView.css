@@ -1,0 +1,225 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+@namespace svg url("http://www.w3.org/2000/svg");
+
+
+page {
+	background-color: white;
+}
+
+svg|rect#view-background {
+	fill: white;
+}
+
+svg|foreignObject {
+/*	list-style-image: url("chrome://webmap/skin/view/default.png");*/
+	font-size: small;
+}
+
+
+.node-image-container,
+.node-label-container {
+	-moz-border-radius: 8px;
+	border: 0 none #cd621e;
+	background: #fff6d6;
+	color: black;
+}
+
+svg|foreignObject:hover .node-image-container,
+svg|foreignObject:hover .node-label-container {
+	border-color: #055dbf;
+	background: #e5edff;
+}
+
+svg|foreignObject[node-selected="true"] .node-image-container,
+svg|foreignObject[node-selected="true"] .node-label-container,
+svg|foreignObject[node-selected="true"][node-focused="true"] .node-image-container,
+svg|foreignObject[node-selected="true"][node-focused="true"] .node-label-container {
+	border-color: #be3b00;
+	border-style: solid;
+	background: #ff6e30;
+	color: white;
+}
+svg|foreignObject[node-selected="true"]:hover .node-image-container,
+svg|foreignObject[node-selected="true"]:hover .node-label-container,
+svg|foreignObject[node-selected="true"][node-focused="true"]:hover .node-image-container,
+svg|foreignObject[node-selected="true"][node-focused="true"]:hover .node-label-container {
+	border-color: #ff9b50;
+	border-style: solid;
+	background: #ffae70;
+}
+
+svg|foreignObject[node-focused="true"] .node-image-container,
+svg|foreignObject[node-focused="true"] .node-label-container {
+	border-color: #052169;
+	border-style: solid;
+	background: #1776f9;
+	color: white;
+}
+
+svg|foreignObject[node-focused="true"]:hover .node-image-container,
+svg|foreignObject[node-focused="true"]:hover .node-label-container {
+	border-color: #1e5ebd;
+	border-style: solid;
+	background: #3796f9;
+}
+
+
+
+.node-image-container {
+	border-width: 1px;
+	border-style: outset;
+/*	padding: 0.2em;*/
+}
+
+.node-label-container {
+	margin-top: -0.2em;
+	max-width: 11em;
+	text-align: center;
+	opacity: 0.7;
+	-moz-opacity: 0.7;
+}
+
+
+.node-image-box {
+	margin: 3px;
+	background: url("chrome://webmap/skin/view/default.png") 50% 50% no-repeat;
+}
+.node-icon-box {
+	margin: 1px;
+	background: none 0 0 no-repeat;
+}
+
+.node-label {
+	max-width: 10em;
+}
+
+
+.node-count-box {
+	line-height: 1;
+	font-size: 120%;
+	color: #3f2512;
+	background: white;
+	padding: 0.1em;
+	-moz-opacity: 0.8;
+	opacity: 0.8;
+	margin: 0 -0.2em 0 0;
+}
+
+
+
+
+svg|*#canvas {
+	background: white;
+}
+
+
+svg|foreignObject[node-neighbor-selected="true"] .node-image-container {
+	border-color: #ff2aa6;
+	border-style: solid;
+}
+svg|foreignObject[node-neighbor-selected="true"]:hover .node-image-container {
+	border-color: #ff2aa6;
+	border-style: solid;
+}
+
+
+svg|line[class="arc"] {
+	stroke: #308200;
+	stroke-opacity: 0.1;
+}
+svg|g[arc-linked="true"] > svg|line[class="arc"],
+svg|g#world-domain > svg|g > svg|g > svg|line[class="arc"] {
+	stroke-opacity: 1 !important;
+}
+
+svg|g[arc-selected="true"] > svg|line[class="arc"] {
+	stroke: #ff2aa6;
+/*	stroke-width: 1.5pt !important;*/
+}
+
+svg|line[class="arc-reaction-area"]:hover + svg|*[class="arc"],
+svg|line[class="arc"]:hover {
+	stroke: #70c200;
+}
+
+svg|g[arc-selected="true"] > svg|line[class="arc-reaction-area"]:hover + svg|line,
+svg|g[arc-selected="true"] > svg|line[class="arc"]:hover {
+	stroke: #ff98e4;
+}
+svg|g[arc-selected="true"][arc-pointed="true"] > svg|line[class="arc"]:hover + svg|line {
+	fill: #ff98e4;
+}
+
+
+
+svg|g[class="scroll-button"] > svg|path[class="button-dropshadow"] {
+	fill: #405666;
+	fill-rule: evenodd;
+	stroke: none;
+	stroke-width: 1pt;
+	fill-opacity: 0.1;
+}
+svg|g[class="scroll-button"] > svg|path[class="button"] {
+	fill: #202020;
+	fill-rule: evenodd;
+	stroke: none;
+	stroke-width: 1;
+	fill-opacity: 0.3;
+	cursor: pointer;
+}
+
+svg|g[class="scroll-button"]:hover > svg|path[class="button-dropshadow"] {
+	fill-opacity: 0.2;
+}
+svg|g[class="scroll-button"]:hover > svg|path[class="button"] {
+	fill-opacity: 0.7;
+}
+
+svg|g[class="scroll-button"][button-active="true"] > svg|path[class="button"] {
+	fill: #ff4512 !important;
+}
+
+
+
+
+
+svg|rect[class="arc-marker"] {
+	fill: #308200;
+}
+
+svg|g[arc-selected="true"] > svg|rect[class="arc-marker"] {
+	fill: #ff2aa6;
+}
+
+svg|line[class="arc-reaction-area"]:hover + svg|* + svg|rect[class="arc-marker"],
+svg|line[class="arc"]:hover + svg|rect[class="arc-marker"],
+svg|rect[class="arc-marker"]:hover {
+	fill: #70c200;
+}
+
+svg|g[arc-selected="true"] > svg|line[class="arc-reaction-area"]:hover + svg|* + svg|rect[class="arc-marker"],
+svg|g[arc-selected="true"] > svg|line[class="arc"]:hover + svg|rect[class="arc-marker"],
+svg|g[arc-selected="true"] > svg|rect[class="arc-marker"]:hover {
+	fill: #ff98e4;
+}
+
+
+svg|*#arc-marker-image > svg|g > svg|foreignObject > .image-box {
+	background: #308200;
+	-moz-border-radius: 8px;
+}
+
+svg|*#arc-marker-image[selected="true"] > svg|g > svg|foreignObject > .image-box {
+	background: #ff2aa6;
+}
+
+svg|*#arc-marker-image:hover > svg|g > svg|foreignObject > .image-box {
+	background: #70c200;
+}
+
+svg|*#arc-marker-image > svg|g > svg|foreignObject > .image-box > .image-box-inner {
+	-moz-border-radius: 4px;
+	background: #fff6d6 url("chrome://webmap/skin/view/default.png") no-repeat 50% 50%;
+}
+
+

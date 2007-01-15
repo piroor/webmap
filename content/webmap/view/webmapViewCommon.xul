@@ -1,0 +1,486 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://webmap/locale/">
+
+<overlay
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:svg="http://www.w3.org/2000/svg">
+
+<script type="application/x-javascript" src="chrome://webmap/content/pImageLoader.js"/>
+<script type="application/x-javascript" src="chrome://webmap/content/webmapService.js"/>
+<script type="application/x-javascript" src="chrome://webmap/content/view/webmapView.js"/>
+<script type="application/x-javascript" src="chrome://webmap/content/view/webmapCommand.js"/>
+<script type="application/x-javascript" src="chrome://webmap/content/view/webmapViewUI.js"/>
+
+<script type="application/x-javascript"><![CDATA[
+
+function Startup() {
+	WebMapService.init();
+	WebMapView.init();
+	WebMapCommand.init();
+	WebMapViewUI.init();
+}
+
+function Shutdown() {
+	WebMapService.destroy();
+	WebMapView.destroy();
+	WebMapCommand.destroy();
+	WebMapViewUI.destroy();
+}
+
+]]></script>
+
+
+	<toolbaritem id="menubar-items" align="center">
+		<menubar id="main-menubar"
+			statusbar="statusbar-display"
+			style="border:0px;padding:0px;margin:0px;-moz-appearance:none">
+
+			<menu id="menubar-file-menu"
+				label="&webmap.menu.file.label;"
+				accesskey="&webmap.menu.file.accesskey;">
+				<menupopup id="menubar-file-menupopup">
+
+					<menuitem id="menubar-file-item-openBrowser"
+						label="&webmap.menu.file.openBrowser.label;"
+						accesskey="&webmap.menu.file.openBrowser.accesskey;"
+						command="webmap-cmd-openBrowser"
+						key="webmap-key-openBrowser"/>
+
+					<menuseparator id="menubar-file-sep-closeWindow"/>
+
+					<menuitem id="menubar-file-item-closeWindow"
+						label="&webmap.menu.file.close.label;"
+						accesskey="&webmap.menu.file.close.accesskey;"
+						command="cmd_closeWindow"
+						key="key_closeWindow"/>
+
+					<menuseparator id="menubar-file-sep-config"/>
+
+					<menuitem id="menubar-file-item-config"
+						label="&webmap.menu.file.config.label;"
+						accesskey="&webmap.menu.file.config.accesskey;"
+						command="cmd_showConfiguration"/>
+
+				</menupopup>
+			</menu>
+
+			<menu id="menubar-view-menu"
+				label="&webmap.menu.view.label;"
+				accesskey="&webmap.menu.view.accesskey;">
+				<menupopup id="menubar-view-menupopup">
+
+					<menuitem id="menubar-view-item-mode"
+						type="checkbox"
+						label="&webmap.menu.view.mode.label;"
+						accesskey="&webmap.menu.view.mode.accesskey;"
+						oncommand="WebMapView.toggleMapMode();"/>
+					<menuitem id="menubar-view-item-collapse"
+						type="checkbox"
+						label="&webmap.menu.view.collapse.label;"
+						accesskey="&webmap.menu.view.collapse.accesskey;"
+						oncommand="WebMapViewUI.collapseExpand();"/>
+
+					<menuseparator id="menubar-view-sep-autoCollapse"/>
+
+					<menuitem id="menubar-view-item-autoCollapse"
+						type="checkbox"
+						label="&webmap.menu.view.autoCollapse.label;"
+						accesskey="&webmap.menu.view.autoCollapse.accesskey;"
+						oncommand="WebMapViewUI.toggleAutoCollapse();"/>
+
+					<menuitem id="menubar-view-item-alwaysRaised"
+						type="checkbox"
+						label="&webmap.menu.view.alwaysRaised.label;"
+						accesskey="&webmap.menu.view.alwaysRaised.accesskey;"
+						oncommand="WebMapViewUI.toggleAlwaysRaised();"/>
+
+					<menuseparator id="menubar-view-sep-combination"/>
+
+					<menuitem id="menubar-view-item-autoMinimize"
+						type="checkbox"
+						label="&webmap.menu.view.autoMinimize.label;"
+						accesskey="&webmap.menu.view.autoMinimize.accesskey;"
+						oncommand="WebMapViewUI.toggleAutoMinimize();"/>
+
+					<menuitem id="menubar-view-item-autoClose"
+						type="checkbox"
+						label="&webmap.menu.view.autoClose.label;"
+						accesskey="&webmap.menu.view.autoClose.accesskey;"
+						oncommand="WebMapViewUI.toggleAutoClose();"/>
+
+				</menupopup>
+			</menu>
+
+		</menubar>
+	</toolbaritem>
+
+
+	<toolbarbutton id="webmap-toolbar-zoomin"
+		class="toolbarbutton-1 chromeclass-toolbar-additional webmap-toolbar-item webmap-toolbar-zoomin"
+		label="&webmap.toolbar.zoomin.label;"
+		tooltiptext="&webmap.toolbar.zoomin.tooltip;"
+		command="webmap-cmd-zoomIn"/>
+
+	<toolbarbutton id="webmap-toolbar-zoomout"
+		class="toolbarbutton-1 chromeclass-toolbar-additional webmap-toolbar-item webmap-toolbar-zoomout"
+		label="&webmap.toolbar.zoomout.label;"
+		tooltiptext="&webmap.toolbar.zoomout.tooltip;"
+		command="webmap-cmd-zoomOut"/>
+
+	<toolbaritem id="webmap-toolbar-zoom" align="center"
+		title="&webmap.status.zoom.label;"
+		class="chromeclass-toolbar-additional webmap-toolbar-item webmap-toolbar-zoom">
+		<label control="webmap-toolbar-zoom-value"
+			value="&webmap.status.zoom.label_before;"/>
+		<menulist id="webmap-toolbar-zoom-value"
+			editable="true"
+			oncommand="WebMapViewUI.onChangeZoom();"
+			onkeypress="if (event.keyCode == event.DOM_VK_RETURN || event.keyCode == event.DOM_VK_ENTER) eval(this.getAttribute('oncommand'));">
+			<menupopup/>
+		</menulist>
+		<label control="webmap-toolbar-zoom-value"
+			value="&webmap.status.zoom.label_after;"/>
+	</toolbaritem>
+
+	<toolbarbutton id="webmap-toolbar-mapmode"
+		class="toolbarbutton-1 chromeclass-toolbar-additional webmap-toolbar-item webmap-toolbar-mapmode"
+		type="checkbox" autoCheck="false"
+		label="&webmap.toolbar.mapmode.label;"
+		tooltiptext="&webmap.toolbar.mapmode.tooltip;"
+		oncommand="WebMapView.toggleMapMode();"/>
+
+	<toolbarbutton id="webmap-toolbar-collapse"
+		class="toolbarbutton-1 chromeclass-toolbar-additional webmap-toolbar-item webmap-toolbar-collapse"
+		type="checkbox" autoCheck="false"
+		label="&webmap.toolbar.collapse.label;"
+		tooltiptext="&webmap.toolbar.collapse.tooltip;"
+		oncommand="WebMapViewUI.collapseExpand();"/>
+
+	<toolbaritem id="throbber-box"
+		title="&webmap.toolbar.throbber.label;"
+		align="center"
+		pack="center">
+		<button id="webmap-throbber"
+			oncommand="WebMapCommand.onThrobberCommand(event);"
+			onclick="WebMapCommand.onThrobberClick(event);"
+			tooltiptext="&webmap.toolbar.throbber.tooltip;"/>
+	</toolbaritem>
+
+
+
+<vbox id="webmap-content-outer-box"
+	flex="1">
+	<vbox id="webmap-content-box"
+		flex="1"
+		context="webmap-contextmenu"
+		onclick="WebMapCommand.onClick(event);"
+		ondblclick="WebMapCommand.onDblClick(event);"
+		onmousedown="WebMapCommand.onMouseDown(event);"
+		onmouseup="WebMapCommand.onMouseUp(event);"
+		onmousemove="WebMapCommand.onMouseMove(event);">
+		<iframe id="content"
+			flex="1"
+			src="chrome://webmap/content/view/webmapViewContent.xul"/>
+	</vbox>
+
+	<statusbar id="webmap-statusbar">
+		<statusbarpanel id="status-pan" collapsed="true" align="center">
+			<label value="&webmap.status.pan.label_before;"/>
+			<label id="status-pan-x" value=""/>
+			<label value="&webmap.status.pan.label_middle;"/>
+			<label id="status-pan-y" value=""/>
+			<label value="&webmap.status.pan.label_after;"/>
+		</statusbarpanel>
+		<statusbarpanel id="status-move" collapsed="true" align="center">
+			<label value="&webmap.status.move.label_before;"/>
+			<label id="status-move-x" value=""/>
+			<label value="&webmap.status.move.label_middle;"/>
+			<label id="status-move-y" value=""/>
+			<label value="&webmap.status.move.label_after;"/>
+		</statusbarpanel>
+		<statusbarpanel id="status-message" flex="1"/>
+	</statusbar>
+</vbox>
+
+
+<box id="status-message-data" collapse="true">
+	<data id="status-message-build-start" value="&webmap.status.msg.build.start;"/>
+	<data id="status-message-build-end"   value="&webmap.status.msg.build.end;"/>
+	<data id="status-message-build-node"  value="&webmap.status.msg.build.node;"/>
+	<data id="status-message-build-arc"   value="&webmap.status.msg.build.arc;"/>
+
+	<data id="status-message-node-mouseover" value="&webmap.status.msg.node.mouseover;"/>
+	<data id="status-message-node-mouseout" value="&webmap.status.msg.node.mouseout;"/>
+	<data id="status-message-domain-mouseover" value="&webmap.status.msg.domain.mouseover;"/>
+	<data id="status-message-domain-mouseout" value="&webmap.status.msg.domain.mouseout;"/>
+
+	<data id="status-message-arc-mouseover" value="&webmap.status.msg.arc.mouseover;"/>
+	<data id="status-message-arc-mouseout" value="&webmap.status.msg.arc.mouseout;"/>
+	<data id="status-message-arc-interactive-mouseover" value="&webmap.status.msg.arc.interactive.mouseover;"/>
+	<data id="status-message-arc-interactive-mouseout" value="&webmap.status.msg.arc.interactive.mouseout;"/>
+</box>
+
+<popupset id="webmap-popupset">
+	<popup id="toolbar-context-menu">
+		<menuitem command="cmd_CustomizeToolbars"
+			label="&webmap.toolbar.customize.label;"
+			accesskey="&webmap.toolbar.customize.accesskey;"/>
+	</popup>
+
+	<menupopup id="webmap-contextmenu"
+		onpopupshowing="WebMapViewUI.initContextMenu(event);"
+		onpopuphiding="WebMapViewUI.destroyContextMenu(event);">
+
+		<menuitem id="webmap-context-item-load"
+			label="&webmap.context.load.label;"
+			accesskey="&webmap.context.load.accesskey;"
+			command="webmap-cmd-load"/>
+		<menuitem id="webmap-context-item-loadDomainInTab"
+			label="&webmap.context.loadDomainInTab.label;"
+			accesskey="&webmap.context.loadDomainInTab.accesskey;"
+			command="webmap-cmd-loadDomainInTab"/>
+		<menuitem id="webmap-context-item-loadInTab"
+			label="&webmap.context.loadInTab.label;"
+			accesskey="&webmap.context.loadInTab.accesskey;"
+			command="webmap-cmd-loadInNewTab"/>
+		<menuitem id="webmap-context-item-loadAllInTab"
+			label="&webmap.context.loadAllInTab.label;"
+			accesskey="&webmap.context.loadAllInTab.accesskey;"
+			command="webmap-cmd-loadAllInTab"/>
+		<menuitem id="webmap-context-item-loadAllDomainInTab"
+			label="&webmap.context.loadAllDomainInTab.label;"
+			accesskey="&webmap.context.loadAllDomainInTab.accesskey;"
+			command="webmap-cmd-loadAllDomainInTab"/>
+		<menuitem id="webmap-context-item-openWindow"
+			label="&webmap.context.openWindow.label;"
+			accesskey="&webmap.context.openWindow.accesskey;"
+			command="webmap-cmd-openWindow"/>
+
+		<menuseparator id="webmap-context-sep-goto"/>
+
+		<menuitem id="webmap-context-item-gotoFromNode"
+			class="menuitem-iconic"
+			item-gotoFromNode="true"
+			style="max-width: &webmap.context.maxwidth;"
+			labelmodifier="&webmap.context.gotoFromNode.label;"
+			accesskey="&webmap.context.gotoFromNode.accesskey;"
+			command="webmap-cmd-gotoFromNode"/>
+		<menuitem id="webmap-context-item-gotoTargetNode"
+			class="menuitem-iconic"
+			item-gotoTargetNode="true"
+			style="max-width: &webmap.context.maxwidth;"
+			labelmodifier="&webmap.context.gotoTargetNode.label;"
+			accesskey="&webmap.context.gotoTargetNode.accesskey;"
+			command="webmap-cmd-gotoTargetNode"/>
+
+		<menuseparator id="webmap-context-sep-select"/>
+
+		<menuitem id="webmap-context-item-selectNeighbor"
+			label="&webmap.context.selectNeighbor.label;"
+			accesskey="&webmap.context.selectNeighbor.accesskey;"
+			command="webmap-cmd-selectNeighbor"/>
+		<menuitem id="webmap-context-item-selectSameDomain"
+			label="&webmap.context.selectSameDomain.label;"
+			accesskey="&webmap.context.selectSameDomain.accesskey;"
+			command="webmap-cmd-selectSameDomain"/>
+		<menuitem id="webmap-context-item-selectAll"
+			class="webmap-context-item-for-world"
+			label="&webmap.context.selectAll.label;"
+			accesskey="&webmap.context.selectAll.accesskey;"
+			command="webmap-cmd-selectAll"/>
+
+		<menuseparator id="webmap-context-sep-remove"/>
+
+		<menuitem id="webmap-context-item-removeNode"
+			label="&webmap.context.removeNode.label;"
+			accesskey="&webmap.context.removeNode.accesskey;"
+			command="webmap-cmd-removeNode"/>
+		<menuitem id="webmap-context-item-removeDomain"
+			label="&webmap.context.removeDomain.label;"
+			accesskey="&webmap.context.removeDomain.accesskey;"
+			command="webmap-cmd-removeDomain"/>
+		<menuitem id="webmap-context-item-removeArc"
+			label="&webmap.context.removeArc.label;"
+			accesskey="&webmap.context.removeArc.accesskey;"
+			command="webmap-cmd-removeArc"/>
+		<menuitem id="webmap-context-item-removeSelection"
+			label="&webmap.context.removeSelection.label;"
+			accesskey="&webmap.context.removeSelection.accesskey;"
+			command="webmap-cmd-removeSelection"/>
+		<menuitem id="webmap-context-item-removeDomainSelection"
+			label="&webmap.context.removeDomainSelection.label;"
+			accesskey="&webmap.context.removeDomainSelection.accesskey;"
+			command="webmap-cmd-removeDomainSelection"/>
+
+		<menuseparator id="webmap-context-sep-zoom"/>
+
+		<menuitem id="webmap-context-item-zoomIn"
+			class="menuitem-iconic"
+			label="&webmap.context.zoomIn.label;"
+			accesskey="&webmap.context.zoomIn.accesskey;"
+			command="webmap-cmd-zoomIn"/>
+		<menuitem id="webmap-context-item-zoomOut"
+			class="menuitem-iconic"
+			label="&webmap.context.zoomOut.label;"
+			accesskey="&webmap.context.zoomOut.accesskey;"
+			command="webmap-cmd-zoomOut"/>
+
+		<menuseparator id="webmap-context-sep-scroll"/>
+
+		<menuitem id="webmap-context-item-startScroll"
+			class="menuitem-iconic"
+			label="&webmap.context.startScroll.label;"
+			accesskey="&webmap.context.startScroll.accesskey;"
+			command="webmap-cmd-startScroll"/>
+
+		<menuseparator id="webmap-context-sep-nodes"/>
+
+		<menu id="webmap-context-item-nodes"
+			label="&webmap.context.nodes.label;"
+			accesskey="&webmap.context.nodes.accesskey;"
+			select-item-label="&webmap.context.nodes.select;">
+			<menupopup id="webmap-context-item-nodes-mpopup"
+				oncommand="WebMapCommand.onNodeMenuItemCommand(event, WebMapService.getPref('webmap.view.autoload.foundNode'));"
+				onclick="WebMapCommand.onNodeMenuItemClick(event, WebMapService.getPref('webmap.view.autoload.foundNode'));"
+				onpopupshowing="WebMapViewUI.initNodesPopup(event); event.stopPropagation();"
+				onpopuphiding="WebMapViewUI.destroyNodesPopup(event); event.stopPropagation();"/>
+		</menu>
+
+	</menupopup>
+
+
+	<menupopup id="webmap-domain-nodes-list"
+		onpopupshowing="WebMapViewUI.initDomainNodesList(this);"
+		onpopuphiding="WebMapViewUI.destroyDomainNodesList(this);"/>
+
+	<menupopup id="webmap-arc-popup">
+		<menuitem class="menuitem-iconic"
+			item-gotoFromNode="true"
+			style="max-width: &webmap.context.maxwidth;"
+			labelmodifier="&webmap.context.gotoFromNode.label;"
+			oncommand="WebMapCommand.goToNodeOf(WebMapView.getArcById(this.parentNode.arcID), WebMapCommand.ANCHOR_NODE);"/>
+		<menuitem class="menuitem-iconic"
+			item-gotoTargetNode="true"
+			style="max-width: &webmap.context.maxwidth;"
+			labelmodifier="&webmap.context.gotoTargetNode.label;"
+			oncommand="WebMapCommand.goToNodeOf(WebMapView.getArcById(this.parentNode.arcID), WebMapCommand.TARGET_NODE);"/>
+	</menupopup>
+
+</popupset>
+
+
+<commandset id="webmap-commandset">
+	<command id="cmd_CustomizeToolbars"
+		oncommand="WebMapCommand.customizeToolbar();"/>
+
+	<command id="webmap-cmd-openBrowser"
+		oncommand="WebMapCommand.openBrowser();"/>
+	<command id="cmd_closeWindow"
+		oncommand="window.close()"/>
+	<command id="cmd_showConfiguration"
+		oncommand="WebMapCommand.showConfiguration()"/>
+
+
+
+	<command id="webmap-cmd-load"
+		oncommand="WebMapCommand.loadNode(WebMapCommand.contextNode, WebMapCommand.CURRENT_TAB);"/>
+	<command id="webmap-cmd-loadDomainInTab"
+		oncommand="WebMapCommand.loadNodes([WebMapCommand.contextNode], WebMapCommand.NEW_TAB);"/>
+	<command id="webmap-cmd-loadInNewTab"
+		oncommand="WebMapCommand.loadNode(WebMapCommand.contextNode, WebMapCommand.NEW_TAB);"/>
+	<command id="webmap-cmd-loadAllInTab"
+		oncommand="WebMapCommand.loadNodes(ebMapView.getSelectedNodes(), WebMapCommand.NEW_TAB);"/>
+	<command id="webmap-cmd-loadAllDomainInTab"
+		oncommand="WebMapCommand.loadNodes(ebMapView.getSelectedNodes(), WebMapCommand.NEW_TAB);"/>
+	<command id="webmap-cmd-openWindow"
+		oncommand="WebMapCommand.loadNode(WebMapCommand.contextNode, WebMapCommand.NEW_WINDOW);"/>
+
+	<command id="webmap-cmd-gotoFromNode"
+		oncommand="WebMapCommand.goToNodeOf(WebMapCommand.contextArc, WebMapCommand.ANCHOR_NODE);"/>
+	<command id="webmap-cmd-gotoTargetNode"
+		oncommand="WebMapCommand.goToNodeOf(WebMapCommand.contextArc, WebMapCommand.TARGET_NODE);"/>
+
+	<command id="webmap-cmd-selectNeighbor"
+		oncommand="WebMapCommand.selectNeighborNodes(WebMapCommand.contextNode);"/>
+	<command id="webmap-cmd-selectSameDomain"
+		oncommand="WebMapCommand.selectSameDomainNodes(WebMapCommand.contextNode);"/>
+	<command id="webmap-cmd-selectAll"
+		oncommand="WebMapCommand.selectAllNodes();"/>
+
+	<command id="webmap-cmd-removeNode"
+		oncommand="WebMapCommand.removeNode(WebMapCommand.contextNode);"/>
+	<command id="webmap-cmd-removeDomain"
+		oncommand="WebMapCommand.removeNode(WebMapCommand.contextNode);"/>
+	<command id="webmap-cmd-removeArc"
+		oncommand="WebMapCommand.removeArc(WebMapCommand.contextArc);"/>
+	<command id="webmap-cmd-removeSelection"
+		oncommand="WebMapCommand.removeNodes(WebMapView.getSelectedNodes());"/>
+	<command id="webmap-cmd-removeDomainSelection"
+		oncommand="WebMapCommand.removeNodes(WebMapView.getSelectedNodes());"/>
+
+	<command id="webmap-cmd-zoomIn"
+		oncommand="WebMapView.zoomIn();"/>
+	<command id="webmap-cmd-zoomOut"
+		oncommand="WebMapView.zoomOut();"/>
+
+	<command id="webmap-cmd-startScroll"
+		oncommand="WebMapCommand.enterPanMode();"/>
+
+</commandset>
+
+
+<keyset id="webmap-keyset">
+
+	<key id="key_closeWindow"
+		key="&webmap.menu.file.close.shortcut;"
+		modifiers="accel"
+		command="cmd_closeWindow"/>
+
+	<key id="webmap-key-openBrowser"
+		key="&webmap.menu.file.openBrowser.shortcut;"
+		modifiers="accel"
+		command="webmap-cmd-openBrowser"/>
+
+	<key id="webmap-key-remove"
+		keycode="VK_DELETE"
+		oncommand="
+			if (WebMapCommand.contextArc)
+				WebMapCommand.removeArc(WebMapCommand.contextArc);
+			else if (WebMapView.getSelectedNodes().length)
+				WebMapCommand.removeNodes(WebMapView.getSelectedNodes());
+			else
+				WebMapCommand.removeNode(WebMapCommand.contextNode);
+		"/>
+
+	<key id="webmap-key-selectAll"
+		key="&webmap.context.selectAll.shortcut;"
+		modifiers="accel"
+		command="webmap-cmd-selectAll"/>
+
+	<key id="webmap-key-zoomIn"
+		key="&webmap.context.zoomIn.shortcut;"
+		command="webmap-cmd-zoomIn"/>
+	<key id="webmap-key-zoomOut"
+		key="&webmap.context.zoomOut.shortcut;"
+		command="webmap-cmd-zoomOut"/>
+
+
+	<key id="webmap-key-pan-n"
+		keycode="VK_UP"
+		oncommand="WebMapCommand.onScrollByKey(event);"/>
+	<key id="webmap-key-pan-s"
+		keycode="VK_DOWN"
+		oncommand="WebMapCommand.onScrollByKey(event);"/>
+	<key id="webmap-key-pan-e"
+		keycode="VK_RIGHT"
+		oncommand="WebMapCommand.onScrollByKey(event);"/>
+	<key id="webmap-key-pan-w"
+		keycode="VK_LEFT"
+		oncommand="WebMapCommand.onScrollByKey(event);"/>
+
+</keyset>
+
+
+</overlay>

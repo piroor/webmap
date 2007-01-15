@@ -1,0 +1,39 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+
+toolbar[mode='icons'] .toolbarbutton-text {
+  display: none;
+}
+
+toolbar[mode='text'] .toolbarbutton-menubutton-dropmarker,
+toolbar[mode='text'] .toolbarbutton-icon {
+  display: none;
+}
+
+
+
+.toolbarbutton-1#toggleWebMapView-button {
+	list-style-image: url("chrome://webmap/skin/global/toolbar_l.png");
+}
+
+.toolbarbutton-1#toggleWebMapView-button {
+	-moz-image-region: rect(0px 24px 24px 0px);
+}
+.toolbarbutton-1#toggleWebMapView-button[buttonover="true"],
+.toolbarbutton-1#toggleWebMapView-button:hover {
+	-moz-image-region: rect(24px 24px 48px 0px);
+}
+
+
+[iconsize="small"] .toolbarbutton-1#toggleWebMapView-button {
+	list-style-image: url("chrome://webmap/skin/global/toolbar_s.png");
+}
+
+[iconsize="small"] .toolbarbutton-1#toggleWebMapView-button {
+	-moz-image-region: rect(0px 16px 16px 0px);
+}
+[iconsize="small"] .toolbarbutton-1#toggleWebMapView-button[buttonover="true"],
+[iconsize="small"] .toolbarbutton-1#toggleWebMapView-button:hover {
+	-moz-image-region: rect(16px 16px 32px 0px);
+}
+

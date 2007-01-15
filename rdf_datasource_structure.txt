@@ -1,0 +1,56 @@
+*Note:
+  <***> means that it is encoded by encodeURIComponent().
+  [***] means that it is a file or a directory.
+  (***) means that the node is an RDF container.
+  for example, "(Seq)" is a sequential container.
+
+
+When you browse like as:
+
+---------------start-----------------
+
+http://www.google.co.jp/ (loaded from bookmarks)
+=> http://www.google.co.jp/search?hl=ja&q=outsider+reflex&btnG=Google+%E6%A4%9C%E7%B4%A2&lr=
+=> http://piro.sakura.ne.jp/
+
+----------------end------------------
+
+then, histories are created like following:
+
+---------------start-----------------
+
++ [webmap]
+   + [webmap.rdf]
+   |  + urn:webmap:root (Seq)
+   |     + http://www.google.co.jp/
+   |
+   + [www.google.co.jp.rdf]
+   |  + http://www.google.co.jp/
+   |  |  + Icon : http://www.google.co.jp/favicon.ico
+   |  |  + Arcs : urn:webmap:arcs:http://www.google.co.jp/ (Seq)
+   |  |     + urn:webmap:arc:<http://www.google.co.jp/>:<http://www.google.co.jp/search/>
+   |  + urn:webmap:arc:<http://www.google.co.jp/>:<http://www.google.co.jp/search/>
+   |  |  + From : http://www.google.co.jp/
+   |  |  + To   : http://www.google.co.jp/search/
+   |  |
+   |  + http://www.google.co.jp/search/
+   |  |  + Icon : http://www.google.co.jp/favicon.ico
+   |  |  + Arcs : urn:webmap:arcs:http://www.google.co.jp/search/ (Seq)
+   |  |     + urn:webmap:arc:<http://www.google.co.jp/search/>:<http://piro.sakura.ne.jp/>
+   |  + urn:webmap:arc:<http://www.google.co.jp/search/>:<http://piro.sakura.ne.jp/>
+   |  |  + From : http://www.google.co.jp/search/
+   |  |  + To   : http://piro.sakura.ne.jp/
+   |  |
+   |  + http://www.google.co.jp/favicon.ico
+   |     + ImageData : data:***
+   |
+   + [piro.sakura.ne.jp.rdf]
+      + http://piro.sakura.ne.jp/
+      |  + Icon : http://piro.sakura.ne.jp/common/favicon.png
+      |  + Arcs : urn:webmap:arcs:http://piro.sakura.ne.jp/ (Seq)
+      |     + urn:webmap:arc:<http://www.google.co.jp/search/>:<http://piro.sakura.ne.jp/>
+      |
+      + http://piro.sakura.ne.jp/common/favicon.png
+         + ImageData : data:***
+
+----------------end------------------

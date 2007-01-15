@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://webmap/skin/global/toolbar.css" type="text/css"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://webmap/locale/">
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<script type="application/x-javascript" src="chrome://webmap/content/pImageLoader.js"/>
+<script type="application/x-javascript" src="chrome://webmap/content/webmapService.js"/>
+<script type="application/x-javascript" src="chrome://webmap/content/browser/webmapBrowserService.js"/>
+
+
+<commandset id="commands">
+	<command id="cmd_toggleWebMapView"
+		oncommand="WebMapBrowserService.showHideWebMapView();"/>
+</commandset>
+
+<broadcasterset id="navBroadcasters">
+	<broadcaster id="toggleWebMapView-broadcaster"
+		type="checkbox"
+		autoCheck="true"
+		label="&webmap.toggleWebMapView.title;"
+		accesskey="&webmap.toggleWebMapView.accesskey;"/>
+</broadcasterset>
+
+<keyset id="navKeys">
+	<key id="key_toggleWebMapView"
+		key="&webmap.toggleWebMapView.shorcut;"
+		modifiers="accel,shift"
+		command="cmd_toggleWebMapView"/>
+</keyset>
+
+<hbox id="nav-bar-inner"
+	insertbefore="throbber-box">
+	<toolbarbutton id="toggleWebMapView-button" 
+		class="toolbarbutton-1"
+		tooltiptext="&webmap.toggleWebMapView.tooltip;" 
+		observes="toggleWebMapView-broadcaster"
+		command="cmd_toggleWebMapView"/>
+</hbox>
+
+
+</overlay>

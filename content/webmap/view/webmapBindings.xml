@@ -1,0 +1,1056 @@
+<?xml version="1.0" encoding="Shift_JIS"?> 
+
+<!DOCTYPE bindings SYSTEM "chrome://webmap/locale/">
+
+<bindings id="webmapBindings"
+	xmlns="http://www.mozilla.org/xbl"
+	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:xbl="http://www.mozilla.org/xbl"
+	xmlns:svg="http://www.w3.org/2000/svg">
+
+<binding id="webmap-node-base" extends="svg:foreignObject">
+	<implementation>
+		<property name="active" readonly="true"
+			onget="return this.ownerWorld.active;"/>
+
+		<property name="type" readonly="true"
+			onget="return this.getAttribute('node-type');"/>
+
+		<property name="id" readonly="true"
+			onget="return this.getAttribute('node-id');"/>
+
+		<property name="arcs"
+			onget="return this.helper.arcs;"
+			onset="return val;"/>
+
+
+		<property name="page"
+			onget="return this.getAttribute('page') || 'about:blank';"
+			onset="this.setAttribute('page', val || 'about:blank'); return val;"/>
+		<property name="URI" readonly="true"
+			onget="return this.page;"/>
+
+		<property name="label"
+			onget="return this.getAttribute('label') || this.page;">
+			<setter><![CDATA[
+				var label = val || this.page;
+				this.setAttribute('label', label);
+
+				var maxLength = window.parent.WebMapView.service.getPref('webmap.node.label.size');
+				this.setAttribute('displayedLabel', (label.length > maxLength) ? label.substring(0, maxLength)+'...' : label );
+
+				return label;
+			]]></setter>
+		</property>
+
+		<property name="image"
+			onget="return this.getAttribute('image');"
+			onset="this.setAttribute('image', val); return val;"/>
+
+		<property name="icon"
+			onget="return this.getAttribute('icon');"
+			onset="this.setAttribute('icon', val); return val;"/>
+
+
+		<property name="ownerWorld" readonly="true"
+			onget="return this.parentNode.parentNode.worldObject;"/>
+
+
+		<property name="offsetX" readonly="true">
+			<getter><![CDATA[
+				return -(
+					(
+						Math.max(this.width, 1) /
+						(
+							Math.max(this.ownerWorld.scale, 1)/100
+						)
+					)/2
+				);
+			]]></getter>
+		</property>
+
+		<property name="offsetY" readonly="true">
+			<getter><![CDATA[
+				return -(
+					(
+						Math.max(this.height, 1) /
+						(
+							Math.max(this.ownerWorld.scale, 1)/100
+						)
+					)/2
+				);
+			]]></getter>
+		</property>
+
+		<property name="boxX" readonly="true"
+			onget="return this.xulBoxObject.x;"/>
+
+		<property name="boxY" readonly="true"
+			onget="return this.xulBoxObject.y;"/>
+
+		<property name="width" readonly="true"
+			onget="return this.xulBoxObject.width;"/>
+
+		<property name="height" readonly="true"
+			onget="return this.xulBoxObject.height;"/>
+
+
+		<property name="selected">
+			<getter><![CDATA[
+				return this.getAttribute('node-selected') == 'true';
+			]]></getter>
+			<setter><![CDATA[
+				if (val) {
+					this.setAttribute('node-selected', true);
+					this.neighborSelected = false;
+				}
+				else
+					this.removeAttribute('node-selected');
+
+				WebMapService.notifyObservers('webmap:view:node-operation:'+this.id, (val ? 'select' : 'unselect'));
+				return this.selected;
+			]]></setter>
+		</property>
+
+		<property name="neighborSelected">
+			<getter><![CDATA[
+				return this.getAttribute('node-neighbor-selected') == 'true';
+			]]></getter>
+			<setter><![CDATA[
+				if (val)
+					this.setAttribute('node-neighbor-selected', true);
+				else
+					this.removeAttribute('node-neighbor-selected');
+
+				return this.neighborSelected;
+			]]></setter>
+		</property>
+
+		<property name="focused">
+			<getter><![CDATA[
+				return this.getAttribute('node-focused') == 'true';
+			]]></getter>
+			<setter><![CDATA[
+				if (val) {
+					WebMapView.clearFocus();
+					WebMapView.lastFocusedNode = this;
+					this.setAttribute('node-focused', true);
+				}
+				else
+					this.removeAttribute('node-focused');
+
+				return this.focused;
+			]]></setter>
+		</property>
+
+		<property name="isDragging">
+			<getter><![CDATA[
+				return this.getAttribute('isDragging') == 'true';
+			]]></getter>
+			<setter><![CDATA[
+				if (val)
+					this.setAttribute('isDragging', true);
+				else
+					this.removeAttribute('isDragging');
+
+				return this.isDragging;
+			]]></setter>
+		</property>
+
+		<property name="ignoreClickEvent">
+			<getter><![CDATA[
+				return this.getAttribute('ignoreClickEvent') == 'true';
+			]]></getter>
+			<setter><![CDATA[
+				if (val)
+					this.setAttribute('ignoreClickEvent', true);
+				else
+					this.removeAttribute('ignoreClickEvent');
+
+				return this.ignoreClickEvent;
+			]]></setter>
+		</property>
+
+		<property name="hidden">
+			<getter><![CDATA[
+				return this.getAttribute('node-hidden') == 'true';
+			]]></getter>
+			<setter><![CDATA[
+				if (val)
+					this.setAttribute('node-hidden', true);
+				else
+					this.removeAttribute('node-hidden');
+
+				return this.hidden;
+			]]></setter>
+		</property>
+
+
+		<method name="moveTo">
+			<parameter name="aX"/>
+			<parameter name="aY"/>
+			<body><![CDATA[
+				this.x = aX;
+				this.y = aY;
+			]]></body>
+		</method>
+
+		<method name="redraw">
+			<body><![CDATA[
+				this.setAttribute('transform', 'translate('+this.offsetX+', '+this.offsetY+')');
+			]]></body>
+		</method>
+
+		<method name="updateArcs">
+			<body><![CDATA[
+				WebMapService.notifyObservers('webmap:view:arc-operation:'+this.id, 'redraw');
+			]]></body>
+		</method>
+
+
+		<constructor><![CDATA[
+			var helper = this.helper;
+			this.ignoreClickEvent = false;
+			this.isDragging = false;
+		]]></constructor>
+
+		<destructor><![CDATA[
+			this.helper.destroy();
+		]]></destructor>
+
+		<property name="helper" readonly="true">
+			<getter><![CDATA[
+				if (!this.mHelper) {
+					this.mHelper = WebMapView.nodeHelpers[this.id] || (new WebMapNodeHelper(this));
+					WebMapView.nodeHelpers[this.id] = this.mHelper;
+				}
+				return this.mHelper;
+			]]></getter>
+		</property>
+
+		<property name="innerBox" readonly="true">
+			<getter><![CDATA[
+				if (!this.mInnerBox)
+					this.mInnerBox = document.getAnonymousElementByAttribute(this, 'class', 'node-box');
+				return this.mInnerBox;
+			]]></getter>
+		</property>
+
+		<property name="xulBoxObject" readonly="true">
+			<getter><![CDATA[
+				if (!this.mXulBoxObject)
+					this.mXulBoxObject = this.innerBox.boxObject;
+				return this.mXulBoxObject;
+			]]></getter>
+		</property>
+
+		<method name="onMouseOver">
+			<parameter name="aEvent"/>
+			<body><![CDATA[
+				if (this.active)
+					WebMapService.notifyObservers('webmap:view:node-operation', 'mouseover\n'+this.id);
+			]]></body>
+		</method>
+		<method name="onMouseOut">
+			<parameter name="aEvent"/>
+			<body><![CDATA[
+				if (this.active)
+					WebMapService.notifyObservers('webmap:view:node-operation', 'mouseout\n'+this.id);
+			]]></body>
+		</method>
+
+	</implementation>
+
+	<handlers>
+		<handler event="mouseover" action="this.onMouseOver(event);"/>
+		<handler event="mouseout"  action="this.onMouseOut(event);"/>
+	</handlers>
+</binding>
+
+
+<binding id="webmap-page-node" extends="chrome://webmap/content/view/webmapBindings.xml#webmap-node-base">
+	<content>
+		<xul:vbox class="node-box"
+			align="center" tooltip="_child">
+			<xul:tooltip>
+				<xul:vbox>
+					<xul:label xbl:inherits="value=label"/>
+					<xul:label xbl:inherits="value=page"/>
+				</xul:vbox>
+			</xul:tooltip>
+			<xul:hbox>
+				<xul:spacer flex="1"/>
+				<xul:hbox class="node-image-container">
+					<xul:stack>
+						<xul:box class="node-image-box"
+							xbl:inherits="image"/>
+						<xul:vbox>
+							<xul:hbox>
+								<xul:hbox class="node-icon-box">
+									<xul:box class="node-icon-box"
+										xbl:inherits="image=icon"/>
+								</xul:hbox>
+								<xul:spacer flex="1"/>
+							</xul:hbox>
+							<xul:spacer flex="1"/>
+						</xul:vbox>
+					</xul:stack>
+				</xul:hbox>
+				<xul:spacer flex="1"/>
+			</xul:hbox>
+			<xul:hbox class="node-label-box">
+				<xul:spacer flex="1"/>
+				<xul:hbox class="node-label-container">
+					<xul:label class="node-label"
+						xbl:inherits="value=displayedLabel"/>
+				</xul:hbox>
+				<xul:spacer flex="1"/>
+			</xul:hbox>
+		</xul:vbox>
+	</content>
+
+	<implementation>
+
+		<property name="URI" readonly="true"
+			onget="return this.id;"/>
+
+		<property name="domain" readonly="true"
+			onget="return this.getAttribute('domain'+WebMapView.DOMAIN_SAME);"/>
+
+		<property name="domain2" readonly="true"
+			onget="return this.getAttribute('domain'+WebMapView.DOMAIN_SIMILAR);"/>
+
+
+		<property name="resource" readonly="true"
+			onget="return WebMapService.nsIRDFService.GetResource(this.URI);"/>
+
+
+		<property name="x">
+			<getter><![CDATA[
+				return Number(this.getAttribute('x') || 0);
+			]]></getter>
+			<setter><![CDATA[
+				var domainNode = WebMapView.getNode(this.domain);
+				if (domainNode) {
+					domainNode.totalX -= this.x;
+				}
+				this.setAttribute('x', Number(val));
+				this.updateArcs();
+				if (domainNode) {
+					domainNode.totalX += this.x;
+				}
+				if (!this.isDragging) {
+					this.updateGridPosition();
+					WebMapService.setLiteralValueTo(
+						WebMapService.getDataSourceForURI(this.URI),
+						this.resource,
+						WebMapService.NS+'X',
+						this.x
+					);
+				}
+				return this.x;
+			]]></setter>
+		</property>
+
+		<property name="y">
+			<getter><![CDATA[
+				return Number(this.getAttribute('y') || 0);
+			]]></getter>
+			<setter><![CDATA[
+				var domainNode = WebMapView.getNode(this.domain);
+				if (domainNode) {
+					domainNode.totalY -= this.y;
+				}
+				this.setAttribute('y', Number(val));
+				this.updateArcs();
+				if (domainNode) {
+					domainNode.totalY += this.y;
+				}
+				if (!this.isDragging) {
+					this.updateGridPosition();
+					WebMapService.setLiteralValueTo(
+						WebMapService.getDataSourceForURI(this.URI),
+						this.resource,
+						WebMapService.NS+'Y',
+						this.y
+					);
+				}
+				return this.y;
+			]]></setter>
+		</property>
+
+
+		<method name="updateGridPosition">
+			<body><![CDATA[
+				var view = WebMapView;
+				var old;
+				var pos;
+				var grid;
+				var array = view.gridArray;
+				for (var i = 0; i < array.length; i++)
+				{
+					old  = this.getAttribute('gridPosition'+array[i]);
+					if (view.viewDocument.getElementsByAttribute('gridPosition'+array[i], old).length == 1)
+						delete view.gridInfo[array[i]][old];
+
+					grid = view.getGrid(array[i]);
+					pos  = Math.ceil(this.x/grid)+':'+Math.ceil(this.y/grid);
+					this.setAttribute('gridPosition'+array[i], pos);
+				}
+			]]></body>
+		</method>
+
+		<method name="updateDomainPosition">
+			<body><![CDATA[
+				var domainNode = WebMapView.getNode(this.domain);
+				if (!domainNode) return;
+
+				domainNode.updateDomainPosition();
+			]]></body>
+		</method>
+
+	</implementation>
+</binding>
+
+
+<binding id="webmap-domain-node" extends="chrome://webmap/content/view/webmapBindings.xml#webmap-node-base">
+	<content>
+		<xul:vbox class="node-box"
+			align="center" tooltip="_child">
+			<xul:tooltip>
+				<xul:vbox>
+					<xul:hbox align="center">
+						<xul:label xbl:inherits="value=label"/>
+						<xul:label value="&webmap.nodes.domain.count.prefix;"/>
+						<xul:label xbl:inherits="value=count"/>
+						<xul:label value="&webmap.nodes.domain.count.postfix;"/>
+					</xul:hbox>
+					<xul:label xbl:inherits="value=domain"/>
+				</xul:vbox>
+			</xul:tooltip>
+			<xul:hbox>
+				<xul:spacer flex="1"/>
+				<xul:hbox class="node-image-container">
+					<xul:stack>
+						<xul:box class="node-image-box"
+							xbl:inherits="image"/>
+						<xul:vbox>
+							<xul:hbox>
+								<xul:hbox class="node-icon-box">
+									<xul:box class="node-icon-box"
+										xbl:inherits="image=icon"/>
+								</xul:hbox>
+								<xul:spacer flex="1"/>
+							</xul:hbox>
+							<xul:spacer flex="1"/>
+						</xul:vbox>
+						<xul:vbox>
+							<xul:spacer flex="1"/>
+							<xul:hbox>
+								<xul:spacer flex="1"/>
+								<xul:hbox class="node-count-box">
+									<xul:label xbl:inherits="value=count"/>
+								</xul:hbox>
+							</xul:hbox>
+						</xul:vbox>
+					</xul:stack>
+				</xul:hbox>
+				<xul:spacer flex="1"/>
+			</xul:hbox>
+			<xul:hbox class="node-label-box">
+				<xul:spacer flex="1"/>
+				<xul:hbox class="node-label-container">
+					<xul:label class="node-label"
+						xbl:inherits="value=displayedLabel"/>
+				</xul:hbox>
+				<xul:spacer flex="1"/>
+			</xul:hbox>
+		</xul:vbox>
+	</content>
+
+	<implementation>
+
+		<property name="URI" readonly="true"
+			onget="return 'http://'+this.domain;"/>
+
+		<property name="domain" readonly="true"
+			onget="return this.getAttribute('domain');"/>
+
+		<property name="count" readonly="true"
+			onget="return Number(this.getAttribute('count'));"/>
+
+
+		<property name="resource" readonly="true"
+			onget="return WebMapService.nsIRDFService.GetResource(WebMapService.NS+'urn:webmap:nodes:'+encodeURIComponent(this.domain));"/>
+
+		<property name="nodes" readonly="true"
+			onget="return WebMapView.viewDocument.getElementsByAttribute('domain'+WebMapView.DOMAIN_SAME, this.domain);"/>
+
+
+		<property name="x">
+			<getter><![CDATA[
+				return Number(this.getAttribute('x') || 0);
+			]]></getter>
+			<setter><![CDATA[
+				this.setAttribute('x', Number(val));
+				this.updateArcs();
+				if (!this.isDragging) {
+					WebMapService.setLiteralValueTo(
+						WebMapService.getDataSourceForURI(this.URI),
+						this.resource,
+						WebMapService.NS+'X',
+						this.x
+					);
+				}
+				return this.x;
+			]]></setter>
+		</property>
+
+		<property name="y">
+			<getter><![CDATA[
+				return Number(this.getAttribute('y') || 0);
+			]]></getter>
+			<setter><![CDATA[
+				this.setAttribute('y', Number(val));
+				this.updateArcs();
+				if (!this.isDragging) {
+					WebMapService.setLiteralValueTo(
+						WebMapService.getDataSourceForURI(this.URI),
+						this.resource,
+						WebMapService.NS+'Y',
+						this.y
+					);
+				}
+				return this.y;
+			]]></setter>
+		</property>
+
+		<property name="averageX" readonly="true"
+			onget="return (this.totalX || 1)/this.nodes.length;"/>
+
+		<property name="averageY" readonly="true"
+			onget="return (this.totalY || 1)/this.nodes.length;"/>
+
+		<property name="totalX">
+			<getter><![CDATA[
+				return Number(this.getAttribute('totalX') || 0);
+			]]></getter>
+			<setter><![CDATA[
+				this.setAttribute('totalX', Number(val));
+				if (!this.isDragging) {
+					WebMapService.setLiteralValueTo(
+						WebMapService.getDataSourceForURI(this.URI),
+						this.resource,
+						WebMapService.NS+'TotalX',
+						this.totalX
+					);
+				}
+				return this.totalX;
+			]]></setter>
+		</property>
+
+		<property name="totalY">
+			<getter><![CDATA[
+				return Number(this.getAttribute('totalY') || 0);
+			]]></getter>
+			<setter><![CDATA[
+				this.setAttribute('totalY', Number(val));
+				if (!this.isDragging) {
+					WebMapService.setLiteralValueTo(
+						WebMapService.getDataSourceForURI(this.URI),
+						this.resource,
+						WebMapService.NS+'TotalY',
+						this.totalY
+					);
+				}
+				return this.totalY;
+			]]></setter>
+		</property>
+
+
+		<method name="updateDomainPosition">
+			<body><![CDATA[
+				if (this.updateDomainPositionTimer) {
+					window.clearTimeout(this.updateDomainPositionTimer);
+					this.updateDomainPositionTimer = null;
+				}
+				this.updateDomainPositionTimer = window.setTimeout(this.updateDomainPositionCallback, 0, this);
+			]]></body>
+		</method>
+		<method name="updateDomainPositionCallback">
+			<parameter name="aNode"/>
+			<body><![CDATA[
+				aNode.x = aNode.averageX;
+				aNode.y = aNode.averageY;
+			]]></body>
+		</method>
+
+		<method name="updateNodesPosition">
+			<body><![CDATA[
+				if (this.updateNodesPositionTimer) {
+					window.clearTimeout(this.updateNodesPositionTimer);
+					this.updateNodesPositionTimer = null;
+				}
+				this.updateNodesPositionTimer = window.setTimeout(this.updateNodesPositionCallback, 0, this);
+			]]></body>
+		</method>
+		<method name="updateNodesPositionCallback">
+			<parameter name="aNode"/>
+			<body><![CDATA[
+				var dX = aNode.x-aNode.averageX;
+				var dY = aNode.y-aNode.averageY;
+
+				var nodes = aNode.nodes;
+				for (var i = 0; i < nodes.length; i++)
+				{
+					nodes[i].x += dX;
+					nodes[i].y += dY;
+				}
+			]]></body>
+		</method>
+
+	</implementation>
+</binding>
+
+
+
+<binding id="webmap-node-image" extends="xul:box">
+	<implementation>
+		<property name="image" readonly="true"
+			onget="return this.getAttribute('image');"/>
+
+		<constructor><![CDATA[
+			if (this.image)
+				this.setAttribute('style', 'background-image: url('+this.image+')  !important;');
+		]]></constructor>
+	</implementation>
+</binding>
+
+
+
+<binding id="webmap-arc" extends="svg:g">
+	<content>
+		<svg:line class="arc-reaction-area"
+			xbl:inherits="x1,y1,x2,y2"/>
+		<svg:line class="arc"
+			xbl:inherits="x1,y1,x2,y2,stroke-width=arc-width"/>
+		<svg:rect class="arc-marker"
+			xbl:inherits="width=markerSize,height=markerSize,x=markerX,y=markerY,transform=markerTransform"/>
+	</content>
+
+	<implementation>
+
+		<property name="redrawing"
+			onget="return this.mRedrawing;"
+			onset="this.mRedrawing = val; return val;"/>
+
+
+		<property name="active" readonly="true"
+			onget="return this.ownerWorld.active;"/>
+
+		<property name="id" readonly="true"
+			onget="return this.getAttribute('arc-id');"/>
+
+		<property name="resource" readonly="true"
+			onget="return WebMapService.nsIRDFService.GetResource(WebMapService.NS+'urn:webmap:arc:'+this.id);"/>
+
+
+		<property name="ownerWorld" readonly="true"
+			onget="return this.parentNode.parentNode.worldObject;"/>
+
+
+		<property name="selected">
+			<getter><![CDATA[
+				return this.getAttribute('arc-selected') == 'true';
+			]]></getter>
+			<setter><![CDATA[
+				if (val)
+					this.setAttribute('arc-selected', true);
+				else
+					this.removeAttribute('arc-selected');
+
+				return this.selected;
+			]]></setter>
+		</property>
+
+
+		<property name="linked" readonly="true"
+			onget="return this.getAttribute('arc-linked') == 'true';"/>
+
+		<property name="interactive" readonly="true"
+			onget="return this.getAttribute('arc-interactive') == 'true';"/>
+
+
+		<property name="fromNode" readonly="true"
+			onget="return WebMapView.getNode(this.fromURI);"/>
+
+		<property name="targetNode" readonly="true"
+			onget="return WebMapView.getNode(this.targetURI);"/>
+
+		<property name="fromURI"
+			onget="return this.getAttribute('fromURI');"
+			onset="this.setAttribute('fromURI', val); return val;"/>
+
+		<property name="targetURI"
+			onget="return this.getAttribute('targetURI');"
+			onset="this.setAttribute('targetURI', val); return val;"/>
+
+
+		<method name="getAnchorFrom">
+			<parameter name="aNode"/>
+			<body><![CDATA[
+				if (!aNode || !(this.id in aNode.arcs)) return null;
+
+				return (aNode != this.fromNode) ? this.fromNode :
+						(aNode != this.targetNode) ? this.targetNode :
+						null ;
+			]]></body>
+		</method>
+
+		<method name="redraw">
+			<body><![CDATA[
+				if (this.redrawing || !this.fromNode || !this.targetNode) return;
+				this.redrawing = true;
+
+				WebMapView.clearArcMarker();
+
+				var arc = this;
+				var draw = function() {
+					if (!arc.fromNode || !arc.targetNode) return;
+
+					arc.setAttribute('positionX1', arc.fromNode.x);
+					arc.setAttribute('positionY1', arc.fromNode.y);
+					arc.setAttribute('positionX2', arc.targetNode.x);
+					arc.setAttribute('positionY2', arc.targetNode.y);
+					arc.updatePosition();
+
+					arc = null;
+				};
+				draw();
+
+				var node = this;
+				window.setTimeout(function() {
+					node.updateStatus();
+					node.removeAttribute('arc-building');
+					node = null;
+				}, 0);
+
+				this.redrawing = false;
+			]]></body>
+		</method>
+
+		<method name="updateStatus">
+			<body><![CDATA[
+				this.redrawing = true;
+
+				try {
+					var sv = WebMapService;
+					var ds = sv.getDataSourceForURI(this.fromURI);
+
+					if (!this.linked &&
+						ds &&
+						sv.getTargetValue(ds, this.resource, sv.NS+'ArcType') == sv.NS+'Link')
+						this.setAttribute('arc-linked', true);
+
+					if (!this.interactive) {
+						var targetDS    = sv.getDataSourceForURI(this.targetURI);
+						var id          = this.id.split(':');
+						if (targetDS &&
+							sv.getTargetValue(targetDS, sv.NS+'urn:webmap:arc:'+id[1]+':'+id[0], sv.NS+'ArcType') == sv.NS+'Link')
+							this.setAttribute('arc-interactive', true);
+					}
+
+					var count = parseInt(sv.getLiteralValueFrom(ds, this.resource, sv.NS+'VisitedCount') || 0);
+					count = Math.min(Math.max(count, 5), 1);
+					this.setAttribute('arc-width', (count/5)+'pt');
+				}
+				catch(e) {
+				}
+
+				this.redrawing = false;
+			]]></body>
+		</method>
+
+		<method name="updatePosition">
+			<body><![CDATA[
+				var noredraw = WebMapView.preventRedraw;
+				if (!noredraw) {
+					WebMapView.preventRedraw = true;
+				}
+
+				this.setAttribute('x1', this.getAttribute('positionX1'));
+				this.setAttribute('y1', this.getAttribute('positionY1'));
+				this.setAttribute('x2', this.getAttribute('positionX2'));
+				this.setAttribute('y2', this.getAttribute('positionY2'));
+
+				if (!noredraw) {
+					WebMapView.preventRedraw = false;
+					WebMapView.redraw();
+				}
+			]]></body>
+		</method>
+
+		<method name="showMarker">
+			<parameter name="aEvent"/>
+			<body><![CDATA[
+				if (this.markerTimer) {
+					window.clearTimeout(this.markerTimer);
+					this.markerTimer = null;
+
+					this.hideMarker();
+				}
+
+				var view = window.parent.WebMapView;
+				view.clearArcMarker();
+
+				this.setAttribute('markerX', (aEvent.clientX-view.world.x)/(Math.max(view.world.scale, 1)/100));
+				this.setAttribute('markerY', (aEvent.clientY-view.world.y)/(Math.max(view.world.scale, 1)/100));
+
+				var size = Math.abs(view.service.getPref('webmap.arc.marker.size'));
+				size = size/(Math.max(view.world.scale, 1)/100);
+				this.setAttribute('markerSize', size);
+				this.setAttribute('markerTransform', 'translate('+(-(size/2))+', '+(-(size/2))+')');
+
+
+				this.setAttribute('arc-pointed', true);
+				view.showArcMarkerImage(this, aEvent.clientX, aEvent.clientY);
+
+				var node = this;
+				this.markerTimer = window.setTimeout(function() {
+					node.removeAttribute('arc-pointed');
+					node.markerTimer = null;
+				}, view.service.getPref('webmap.arc.marker.delay.hide'));
+			]]></body>
+		</method>
+
+		<method name="hideMarker">
+			<body><![CDATA[
+				this.removeAttribute('arc-pointed');
+			]]></body>
+		</method>
+
+
+
+
+		<constructor><![CDATA[
+			var helper = this.helper;
+		]]></constructor>
+
+		<destructor><![CDATA[
+			this.helper.destroy();
+		]]></destructor>
+
+		<property name="helper" readonly="true">
+			<getter><![CDATA[
+				if (!this.mHelper) {
+					this.mHelper = WebMapView.arcHelpers[this.id] || (new WebMapArcHelper(this));
+					WebMapView.arcHelpers[this.id] = this.mHelper;
+				}
+				return this.mHelper;
+			]]></getter>
+		</property>
+
+		<method name="onMouseOver">
+			<parameter name="aEvent"/>
+			<body><![CDATA[
+				if (this.active) {
+					this.showMarker(aEvent);
+					WebMapService.notifyObservers('webmap:view:arc-operation', 'mouseover\n'+this.id);
+				}
+			]]></body>
+		</method>
+		<method name="onMouseOut">
+			<parameter name="aEvent"/>
+			<body><![CDATA[
+				if (this.active) {
+					this.hideMarker();
+					WebMapService.notifyObservers('webmap:view:arc-operation', 'mouseout\n'+this.id);
+				}
+			]]></body>
+		</method>
+
+
+	</implementation>
+
+	<handlers>
+		<handler event="mouseover" action="this.onMouseOver(event);"/>
+		<handler event="mouseout"  action="this.onMouseOut(event);"/>
+	</handlers>
+</binding>
+
+
+<binding id="webmap-arc-marker-image" extends="svg:g">
+	<content>
+		<svg:g class="arc-marker-image-container"/>
+	</content>
+
+	<implementation>
+
+		<property name="box" readonly="true">
+			<getter><![CDATA[
+				if (!this.mBox)
+					this.mBox = document.getAnonymousElementByAttribute(this, 'class', 'arc-marker-image-container');
+				return this.mBox;
+			]]></getter>
+		</property>
+		<field name="mBox">
+			null
+		</field>
+
+		<property name="x">
+			<getter><![CDATA[
+				return this.mX;
+			]]></getter>
+			<setter><![CDATA[
+				this.mX = Number(val);
+				if (this.box.hasChildNodes())
+					this.box.firstChild.setAttribute('x', this.mX);
+				return this.x;
+			]]></setter>
+		</property>
+		<field name="mX">
+			0
+		</field>
+
+		<property name="y">
+			<getter><![CDATA[
+				return this.mY;
+			]]></getter>
+			<setter><![CDATA[
+				this.mY = Number(val);
+				if (this.box.hasChildNodes())
+					this.box.firstChild.setAttribute('y', this.mY);
+				return this.y;
+			]]></setter>
+		</property>
+		<field name="mY">
+			0
+		</field>
+
+		<property name="hidden">
+			<getter><![CDATA[
+				return this.mHidden;
+			]]></getter>
+			<setter><![CDATA[
+				if (val) {
+					var range = document.createRange();
+					range.selectNodeContents(this.box);
+					range.deleteContents();
+					range.detach();
+				}
+				else {
+					this.createContent();
+					this.x = this.x;
+					this.y = this.y;
+					this.selected = this.arc.selected;
+				}
+				this.mHidden = val;
+
+				return this.mHidden;
+			]]></setter>
+		</property>
+		<field name="mHidden">
+			null
+		</field>
+
+		<property name="selected">
+			<getter><![CDATA[
+				return this.getAttribute('selected') == 'true';
+			]]></getter>
+			<setter><![CDATA[
+				if (val)
+					this.setAttribute('selected', true);
+				else
+					this.removeAttribute('selected');
+
+				return this.selected;
+			]]></setter>
+		</property>
+
+		<property name="arc">
+			<getter><![CDATA[
+				return WebMapView.getArcById(this.mArcID);
+			]]></getter>
+			<setter><![CDATA[
+				this.mArcID = val.id;
+				return val;
+			]]></setter>
+		</property>
+
+		<property name="node">
+			<getter><![CDATA[
+				return WebMapView.getNode(this.mNodeID);
+			]]></getter>
+			<setter><![CDATA[
+				this.mNodeID = val.id;
+				return val;
+			]]></setter>
+		</property>
+
+		<property name="image">
+			<getter><![CDATA[
+				return this.mImage;
+			]]></getter>
+			<setter><![CDATA[
+				this.mImage = val;
+				return val;
+			]]></setter>
+		</property>
+
+		<method name="createContent">
+			<body><![CDATA[
+				var range = document.createRange();
+				range.selectNodeContents(this.box);
+				range.deleteContents();
+				range.detach();
+
+				var container = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+
+				var node = this.node;
+				container.setAttribute('transform', 'translate(-'+parseInt(node.width/2)+', -'+parseInt(node.height/2)+')');
+
+				var box = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'box');
+				box.setAttribute('class', 'image-box');
+
+
+				box.appendChild(document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'box'));
+				box.lastChild.setAttribute('class', 'image-box-inner');
+				if (this.mImage) {
+					container.setAttribute('image', this.mImage);
+					box.lastChild.setAttribute('style', 'background-image: url('+this.mImage+') !important;');
+				}
+
+				container.appendChild(box);
+
+				this.box.appendChild(container);
+			]]></body>
+		</method>
+
+		<method name="onMouseOver">
+			<parameter name="aEvent"/>
+			<body><![CDATA[
+				if (this.arc.active) {
+					WebMapService.notifyObservers('webmap:view:arc-operation', 'mouseover\n'+this.arc.id);
+				}
+			]]></body>
+		</method>
+		<method name="onMouseOut">
+			<parameter name="aEvent"/>
+			<body><![CDATA[
+				if (this.arc.active) {
+					WebMapService.notifyObservers('webmap:view:arc-operation', 'mouseout\n'+this.arc.id);
+				}
+			]]></body>
+		</method>
+
+	</implementation>
+
+	<handlers>
+		<handler event="mouseover" action="this.onMouseOver(event);"/>
+		<handler event="mouseout"  action="this.onMouseOut(event);"/>
+	</handlers>
+
+</binding>
+
+</bindings>
+

@@ -1,0 +1,65 @@
+
+		var i,
+			anotherNode,
+			r1, // 基準点と走査点の角度
+			r2, // 基準点と基準ノードから他のノードへのアークの角度
+			r3, // 上二つの合計
+			minR = Math.min(Math.max(Math.abs(this.service.getPref('webmap.auto_position.min_r')), 1), 360);
+		var minR_rad                   = minR*Math.PI/180;
+		var minR_available_nodes_count = Math.round(360/minR);
+
+
+			/*
+				基準点、走査点、基準点からのびる他のノードの中心点の
+				3つの座標を見て、三点の間の角が極めて小さく、且つ、
+				走査点ともう一つのノードとの位置が近ければ回避する。
+			*/
+			if (
+				baseNode &&
+				baseNode.arcs.length &&
+				baseNode.arcs.length < minR_available_nodes_count
+				) {
+				for (i in baseNode.arcs)
+				{
+					if (i == 'length') continue;
+
+					anotherNode = baseNode.arcs[i].getAnchorFrom(baseNode);
+
+					anotherX = anotherNode.centerX;
+					anotherY = anotherNode.centerY;
+
+					// 基準点からの距離の差が大きい場合、問題なしと見なす
+					if (
+						Math.abs(
+							Math.sqrt(
+								(startX-newX)*(startX-newX) + (startY-newY)*(startY-newY)
+							)
+							-Math.sqrt(
+								(startX-newX)*(startX-newX) + (startY-newY)*(startY-newY)
+							)
+						) > grid
+						)
+						break;
+
+					// 基準点からの距離の差が近く、角度が近い場合、
+					// 重なる恐れがあるので回避する。
+
+					if ((startX-newX) == 0 && (startY-newY) == 0)
+						r1 = 0;
+					else
+						r1 = -Math.PI/2 + Math.atan2(-(startY-newY), (startX-newX));
+
+					if ((startX-anotherX) == 0 && (startY-anotherY) == 0)
+						r2 = 0;
+					else
+						r2 = -Math.PI/2 + Math.atan2(-(startY-anotherY), (startX-anotherX));
+
+					r3 = Math.abs(r1-r2);
+					while (r3 > -Math.PI && r3 > Math.PI) r3 -= Math.PI;
+					while (r3 < -Math.PI && r3 < Math.PI) r3 += Math.PI;
+	dump('NEW R:: '+(r3*180/Math.PI)+'\n')
+
+					if (r3 < minR_rad)
+						continue findBlankGrid;
+				}
+			}

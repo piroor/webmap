@@ -1,0 +1,20 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+
+#webmap-context-item-zoomIn {
+	list-style-image: url("chrome://webmap/skin/view/zoom-in.png");
+}
+
+#webmap-context-item-zoomOut {
+	list-style-image: url("chrome://webmap/skin/view/zoom-out.png");
+}
+
+#webmap-context-item-startScroll {
+	list-style-image: url("chrome://webmap/skin/view/pan.png");
+}
+
+
+#webmap-context-item-gotoFromNode,
+#webmap-context-item-gotoTargetNode {
+	list-style-image: url("chrome://webmap/skin/view/default.png");
+}

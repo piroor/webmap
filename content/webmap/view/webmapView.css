@@ -1,0 +1,197 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+@namespace svg url("http://www.w3.org/2000/svg");
+
+
+/* global */
+
+svg|*#canvas[arcs-drawing="true"],
+svg|*#canvas[arcs-drawing="true"]  > svg|*#worlds > svg|* > svg|* > svg|*,
+svg|*#canvas[arcs-drawing="true"]  > svg|*#worlds > svg|* > svg|*[class="layer-nodes"] > svg|foreignObject *,
+svg|*#canvas[node-building="true"],
+svg|*#canvas[node-building="true"] > svg|*#worlds > svg|* > svg|* > svg|*,
+svg|*#canvas[node-building="true"] > svg|*#worlds > svg|* > svg|*[class="layer-nodes"] > svg|foreignObject * {
+	cursor: wait !important;
+}
+
+svg|*#canvas[panning="true"],
+svg|*#canvas[panning="true"] > svg|*#worlds > svg|* > svg|* > svg|*,
+svg|*#canvas[panning="true"] > svg|*#worlds > svg|* > svg|*[class="layer-nodes"] > svg|foreignObject * {
+	cursor: move !important;
+}
+
+svg|*#canvas[zooming="true"],
+svg|*#canvas[zooming="true"] > svg|*#worlds > svg|* > svg|* > svg|*,
+svg|*#canvas[zooming="true"] > svg|*#worlds > svg|* > svg|*[class="layer-nodes"] > svg|foreignObject * {
+	cursor: se-resize !important;
+}
+
+
+/* map mode and disable nodes */
+
+svg|foreignObject[node-hidden="true"],
+svg|g[class="webmap-arc"][arc-hidden="true"],
+svg|*#canvas[mapmode="all"]    > svg|*#worlds > svg|*#world-domain > svg|* > svg|*,
+svg|*#canvas[mapmode="domain"] > svg|*#worlds > svg|*#world-all    > svg|* > svg|* {
+	visibility: hidden !important;
+	pointer-events: none !important;
+	cursor: default !important;
+}
+
+svg|*#canvas[mapmode="all"]    > svg|*#worlds > svg|*#world-domain > svg|*[class="layer-nodes"] > svg|foreignObject *,
+svg|*#canvas[mapmode="domain"] > svg|*#worlds > svg|*#world-all    > svg|*[class="layer-nodes"] > svg|foreignObject * {
+	visibility: hidden !important;
+	-moz-user-focus: none !important;
+	-moz-user-select: none !important;
+	cursor: default !important;
+}
+
+svg|g[class="webmap-arc"][arc-hidden="true"] > svg|*,
+svg|*#canvas[mapmode="all"]    > svg|*#worlds > svg|*#world-domain > svg|g[class="layer-arcs"] > svg|* > *|*,
+svg|*#canvas[mapmode="domain"] > svg|*#worlds > svg|*#world-all    > svg|g[class="layer-arcs"] > svg|* > *|* {
+	display: none !important;
+}
+
+svg|foreignObject[node-hidden="true"] tooltip,
+svg|g[class="webmap-arc"][arc-hidden="true"] tooltip,
+svg|*#canvas[mapmode="all"]    > svg|*#worlds > svg|*#world-domain > svg|g[class="layer-nodes"] > svg|* tooltip,
+svg|*#canvas[mapmode="domain"] > svg|*#worlds > svg|*#world-all    > svg|g[class="layer-nodes"] > svg|* tooltip {
+	visibility: collapse !important;
+}
+
+
+
+/* scroll buttons */
+
+svg|*#layer-scroll-buttons {
+	display: none;
+}
+svg|*#canvas[scroll-buttons-active] > svg|*#layer-scroll-buttons {
+	display: inline !important;
+}
+
+
+
+
+/* nodes */
+
+svg|foreignObject[node-type="page-node"] {
+	-moz-binding: url("chrome://webmap/content/view/webmapBindings.xml#webmap-page-node");
+	cursor: pointer;
+}
+
+svg|foreignObject[node-type="domain-node"] {
+	-moz-binding: url("chrome://webmap/content/view/webmapBindings.xml#webmap-domain-node");
+	cursor: pointer;
+}
+
+.node-box {
+/*	z-index: 1000;*/
+	-moz-opacity: 0.999;
+	opacity: 0.999;
+	/*
+		‚±‚ÌŽw’è‚ÌˆÓ–¡‚É‚Â‚¢‚Ä‚Í webmapView.js‚Ì WebMapView.createNode ‚ð
+		ŽQÆ‚Ì‚±‚ÆB
+	*/
+}
+
+/*
+svg|foreignObject image {
+	max-width: 16px;
+	max-height: 16px;
+}
+*/
+.node-image-box {
+	-moz-binding: url("chrome://webmap/content/view/webmapBindings.xml#webmap-node-image");
+	width: 24px;
+	height: 24px;
+}
+svg|*#canvas[image="thumbnail"] > svg|*#worlds > svg|g > svg|g[class="layer-nodes"] > svg|*[image] .node-image-box {
+	width: 100px;
+	height: 100px;
+}
+
+svg|*#canvas[image="thumbnail"] > svg|*#worlds > svg|g > svg|g[class="layer-nodes"] > svg|*[image] .node-icon-box {
+	-moz-binding: url("chrome://webmap/content/view/webmapBindings.xml#webmap-node-image");
+	width: 100px;
+	height: 100px;
+}
+
+.node-label-container {
+	-moz-binding: url("chrome://webmap/content/view/webmapBindings.xml#webmap-node-image");
+}
+
+svg|*#canvas[panning="true"]        > svg|*#worlds > svg|g > svg|g[class="layer-nodes"] > svg|* .node-label-box,
+svg|*#canvas[zooming="true"]        > svg|*#worlds > svg|g > svg|g[class="layer-nodes"] > svg|* .node-label-box,
+svg|*#canvas[nodes-building="true"] > svg|*#worlds > svg|g > svg|g[class="layer-nodes"] > svg|* .node-label-box {
+	visibility: hidden !important;
+}
+
+svg|foreignObject[isDragging="true"],
+svg|foreignObject[isDragging="true"] * {
+	cursor: -moz-grab !important;
+}
+
+
+
+
+/* arcs */
+
+svg|g[class="webmap-arc"] {
+	-moz-binding: url("chrome://webmap/content/view/webmapBindings.xml#webmap-arc");
+	cursor: pointer;
+}
+
+/*svg|*#canvas[panning="true"] > svg|* > svg|g > svg|[class="layer-arcs"],*/
+svg|*#canvas[zooming="true"]        > svg|*#worlds > svg|g > svg|g[class="layer-arcs"],
+svg|*#canvas[nodes-building="true"] > svg|*#worlds > svg|g > svg|g[class="layer-arcs"],
+svg|*#canvas[arcs-drawing="true"]   > svg|*#worlds > svg|g > svg|g[class="layer-arcs"] {
+	display: none !important;
+}
+
+svg|line[class="arc-reaction-area"],
+svg|g[arc-selected="true"] > svg|line[class="arc-reaction-area"] {
+	stroke-opacity: 0 !important;
+	stroke-width: 6pt !important;
+}
+
+
+
+
+/* arc-marker */
+
+svg|rect[class="arc-marker"] {
+	display: none;
+}
+svg|g[arc-pointed="true"] > svg|rect[class="arc-marker"] {
+	display: inline;
+	cursor: pointer;
+}
+
+
+svg|*#arc-marker-image {
+	-moz-binding: url("chrome://webmap/content/view/webmapBindings.xml#webmap-arc-marker-image");
+}
+
+svg|*#arc-marker-image > svg|g > svg|foreignObject > .image-box {
+	padding: 4px;
+	cursor: pointer;
+}
+
+svg|*#arc-marker-image > svg|g > svg|foreignObject > .image-box > .image-box-inner {
+	width: 24px;
+	height: 24px;
+}
+svg|*#canvas[image="thumbnail"] svg|*#arc-marker-image > svg|g > svg|foreignObject[image] > .image-box > .image-box-inner {
+	width: 108px;
+	height: 108px;
+}
+
+
+#webmap-context-item-gotoFromNode image,
+#webmap-context-item-gotoTargetNode image,
+#webmap-context-item-nodes image,
+#webmap-domain-nodes-list menuitem image,
+#webmap-arc-popup menuitem image {
+	max-width: 16px;
+	max-height: 16px;
+}

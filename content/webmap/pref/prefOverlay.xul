@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://webmap/content/pref/prefOverlay.css" type="text/css"?>
+
+<!DOCTYPE overlay [
+<!ENTITY % versionDTD SYSTEM "chrome://webmap/content/_version.dtd">
+%versionDTD;
+<!ENTITY % webmapDTD SYSTEM "chrome://webmap/locale/">
+%webmapDTD;
+]>
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<box orient="vertical" id="webmapPrefs">
+
+<script type="application/x-javascript" src="chrome://webmap/content/pref/exUnregisterer.js"/>
+<script type="application/x-javascript" src="chrome://webmap/content/pref/prefOverlay.js"/>
+
+<tabbox orient="vertical">
+<tabs orient="horizontal">
+	<tab label="&webmap.general.tab;"/>
+	<tab label="&webmap.view.tab;"/>
+	<tab label="&webmap.node.tab;"/>
+	<tab label="&webmap.about.tab;"/>
+</tabs>
+<tabpanels>
+
+	<tabpanel orient="vertical">
+		<box orient="vertical">
+			<checkbox id="webmap.autolink.samedomain"
+				flex="1"
+				label="&webmap.general.autolink_samedomain;"
+				prefstring="webmap.autolink.samedomain"/>
+			<checkbox id="webmap.favicon.load_root_favicon"
+				flex="1"
+				label="&webmap.general.load_root_favicon;"
+				prefstring="webmap.favicon.load_root_favicon"/>
+			<checkbox id="webmap.ignore.query_string"
+				flex="1"
+				label="&webmap.general.ignore_query_string;"
+				prefstring="webmap.ignore.query_string"/>
+			<label value="&webmap.general.schemer;"
+				control="webmap.allow.schemer"/>
+			<box orient="horizontal">
+				<spacer style="width:1em;"/>
+				<textbox id="webmap.allow.schemer"
+					flex="1"
+					prefstring="webmap.allow.schemer"
+					preftype="string"/>
+			</box>
+			<box orient="horizontal">
+				<label value="&webmap.general.maxnodes.prefix;"
+					id="webmap.world.general.maxnodes.prefix"
+					control="webmap.data.maxnodes"/>
+				<textbox id="webmap.data.maxnodes"
+					style="width:6em"
+					prefstring="webmap.data.maxnodes"
+					preftype="int"/>
+				<label value="&webmap.general.maxnodes.postfix;"
+					id="webmap.general.maxnodes.postfix"
+					control="webmap.data.maxnodes"/>
+			</box>
+		</box>
+		<spacer flex="1"/>
+	</tabpanel>
+
+
+	<tabpanel orient="vertical">
+		<box orient="vertical">
+			<checkbox id="webmap.world.scroll.button.autohide"
+				flex="1"
+				label="&webmap.view.autohide_scrollbuttons;"
+				prefstring="webmap.world.scroll.button.autohide"/>
+			<checkbox id="webmap.world.mode.auto_change"
+				flex="1"
+				label="&webmap.view.mode_auto_change;"
+				prefstring="webmap.world.mode.auto_change"
+				oncommand="controlLinkedItems(this);"
+				linked="webmap.world.mode.auto_change.scale.prefix webmap.world.mode.auto_change.scale.postfix webmap.world.mode.auto_change.scale"/>
+			<box orient="horizontal">
+				<spacer style="width:1em;"/>
+				<label value="&webmap.view.mode_auto_change.scale.prefix;"
+					id="webmap.world.mode.auto_change.scale.prefix"
+					control="webmap.world.mode.auto_change.scale"/>
+				<textbox id="webmap.world.mode.auto_change.scale"
+					style="width:5em"
+					prefstring="webmap.world.mode.auto_change.scale"
+					preftype="int"/>
+				<label value="&webmap.view.mode_auto_change.scale.postfix;"
+					id="webmap.world.mode.auto_change.scale.postfix"
+					control="webmap.world.mode.auto_change.scale"/>
+			</box>
+			<checkbox id="webmap.view.vertexrelation.enabled"
+				flex="1"
+				label="&webmap.view.vertexrelation.enabled;"
+				prefstring="webmap.view.vertexrelation.enabled"/>
+		</box>
+		<spacer flex="1"/>
+	</tabpanel>
+
+
+	<tabpanel orient="vertical">
+		<box orient="horizontal">
+			<label value="&webmap.node.image.type;"/>
+			<radiogroup id="webmap.image.type"
+				preftype="int"
+				prefstring="webmap.image.type"
+				orient="horizontal"
+				oncommand="controlLinkedItems(this, this.value == 2);"
+				linked="irfanview_label irfanview_button imagemagick_label imagemagick_button webmap.thumbnail.irfanview.path webmap.thumbnail.imagemagick.path">
+				<radio value="1" label="&webmap.node.image.type.favicon;"/>
+				<radio value="2" label="&webmap.node.image.type.thumbnail;"/>
+			</radiogroup>
+		</box>
+		<box orient="horizontal" id="irfanview_box" collapsed="true">
+			<spacer style="width:1em;"/>
+			<label id="irfanview_label"
+				value="&webmap.node.thumbnail.irfanview;"
+				control="webmap.thumbnail.irfanview.path"/>
+			<textbox id="webmap.thumbnail.irfanview.path"
+				prefstring="webmap.thumbnail.irfanview.path"
+				flex="1"/>
+			<button id="irfanview_button"
+				label="&webmap.node.thumbnail.choose;"
+				oncommand="chooseFileFor('webmap.thumbnail.irfanview.path', Components.interfaces.nsIFilePicker.modeOpen, this.getAttribute('dialogtitle'), 'i_view32.exe', Components.interfaces.nsIFilePicker.filterApps)"
+				dialogtitle="&webmap.node.thumbnail.irfanview.chooserTitle;"/>
+		</box>
+		<box orient="horizontal" id="imagemagick_box" collapsed="true">
+			<spacer style="width:1em;"/>
+			<label id="imagemagick_label"
+				value="&webmap.node.thumbnail.imagemagick;"
+				control="webmap.thumbnail.imagemagick.path"/>
+			<textbox id="webmap.thumbnail.imagemagick.path"
+				prefstring="webmap.thumbnail.imagemagick.path"
+				flex="1"/>
+			<button id="imagemagick_button"
+				label="&webmap.node.thumbnail.choose;"
+				oncommand="chooseFileFor('webmap.thumbnail.imagemagick.path', Components.interfaces.nsIFilePicker.modeGetFolder, this.getAttribute('dialogtitle'))"
+				dialogtitle="&webmap.node.thumbnail.imagemagick.chooserTitle;"/>
+		</box>
+		<spacer flex="1"/>
+	</tabpanel>
+
+
+	<tabpanel orient="vertical">
+		<box orient="horizontal">
+			<spacer flex="1"/>
+			<description value="&webmap.about.name_before;&webmap.version;&webmap.about.name_after;"/>
+			<spacer flex="1"/>
+		</box>
+		<box orient="horizontal">
+			<spacer flex="1"/>
+			<description value="&webmap.about.destributed;"
+				onclick="loadURI(this.getAttribute('value'));"
+				class="text-link"/>
+			<spacer flex="1"/>
+		</box>
+		<box orient="horizontal" id="uninstallBox">
+			<spacer flex="2"/>
+			<button flex="1"
+				label="&webmap.about.uninstall;"
+				oncommand="Unregister();"/>
+			<spacer flex="2"/>
+		</box>
+		<spacer flex="1"/>
+	</tabpanel>
+
+</tabpanels>
+</tabbox>
+
+</box>
+
+</overlay>
