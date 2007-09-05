@@ -1,44 +1,38 @@
-<?xml version="1.0"?>
-<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	 xmlns:em="http://www.mozilla.org/2004/em-rdf#">
-	<Description about="urn:mozilla:install-manifest">
-
-		<em:id>{029C13D5-A40A-4eaa-921C-86DF550FB982}</em:id>
-
-		<em:version>0.3.2005020801</em:version>
-
-
-		<em:targetApplication>
-			<Description><!-- Firefox -->
-				<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
-				<em:minVersion>0.8</em:minVersion>
-				<em:maxVersion>1.0+</em:maxVersion>
-			</Description>
-			<Description><!-- Mozilla Suite -->
-				<em:id>{86c18b42-e466-45a9-ae7a-9b95ba6f5640}</em:id>
-				<em:minVersion>1.0</em:minVersion>
-				<em:maxVersion>1.8</em:maxVersion>
-			</Description>
-		</em:targetApplication>
-
-		<em:name>Web Map</em:name>
-		<em:description>Provides map style history.</em:description>
-		<em:creator>SHIMODA Hiroshi</em:creator>
-		<em:homepageURL>http://piro.sakura.ne.jp/xul/webmap/</em:homepageURL>
-		<em:updateURL>https://pub.cozmixng.org/~piro/xul/xul.rdf.en</em:updateURL>
+<?xml version="1.0" encoding="UTF-8"?>
+<RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="urn:mozilla:install-manifest"
+                   em:id="{029C13D5-A40A-4eaa-921C-86DF550FB982}"
+                   em:name="Web Map"
+                   em:version="0.3.2005020801"
+                   em:creator="SHIMODA Hiroshi"
+                   em:description="Provides map style history."
+                   em:homepageURL="http://piro.sakura.ne.jp/xul/webmap/"
+                   em:iconURL=""
+                   em:optionsURL="chrome://webmap/content/pref/prefDialog.xul">
 
 
-		<em:optionsURL>chrome://webmap/content/pref/prefDialog.xul</em:optionsURL>
-		<!--em:iconURL></em:iconURL-->
+    <em:updateURL>https://pub.cozmixng.org/~piro/xul/xul.rdf.en</em:updateURL>
 
 
-		<em:file>
-			<Description about="urn:mozilla:extension:file:webmap.jar">
-				<em:package>content/webmap/</em:package>
-				<em:locale>locale/en-US/webmap/</em:locale>
-				<em:locale>locale/ja-JP/webmap/</em:locale>
-				<em:skin>skin/classic/webmap/</em:skin>
-			</Description>
-		</em:file>
-	</Description>
-</RDF>
+    <em:targetApplication>
+      <!-- Firefox -->
+      <RDF:Description em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                       em:minVersion="0.8"
+                       em:maxVersion="1.0.*" />
+      <!-- Mozilla Suite -->
+      <RDF:Description em:id="{86c18b42-e466-45a9-ae7a-9b95ba6f5640}"
+                       em:minVersion="1.0"
+                       em:maxVersion="1.8.*" />
+    </em:targetApplication>
+	<em:file>
+		<RDF:Description RDF:about="urn:mozilla:extension:file:webmap.jar">
+			<em:package>content/webmap/</em:package>
+			<em:locale>locale/en-US/webmap/</em:locale>
+			<em:locale>locale/ja-JP/webmap/</em:locale>
+			<em:skin>skin/classic/webmap/</em:skin>
+		</RDF:Description>
+	</em:file>
+  </RDF:Description>
+</RDF:RDF>
